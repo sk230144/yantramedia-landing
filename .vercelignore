@@ -1,0 +1,6 @@
+.openai
+.sites-runtime
+.wrangler
+dist
+outputs
+work
