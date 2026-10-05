@@ -1,6 +1,9 @@
 .openai
 .sites-runtime
 .wrangler
+build
+scripts
 dist
 outputs
 work
+cloudflare-env.d.ts
