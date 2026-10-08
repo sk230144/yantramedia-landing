@@ -210,14 +210,24 @@ function Expand({ open, children }: { open: boolean; children: React.ReactNode }
 function About() {
   const [open, setOpen] = useState(false);
   return (
-    <>
-      <section className="about" id="about" aria-labelledby="about-title">
-        <Reveal>
-          <h2 id="about-title">About Us</h2>
-          <p className="about-copy">Yantra Media is a creative and technology driven agency delivering innovative solutions in branding, digital marketing, UI/UX, web development, performance marketing, and technology.</p>
-        </Reveal>
-        <Reveal className="about-media" y={30}><img src={`${A}/about-media.png`} alt="Social media content showreel" /></Reveal>
-        <Expand open={open}>
+    <section className={`about ${open ? "is-open" : ""}`} id="about" aria-labelledby="about-title">
+      <Reveal>
+        <h2 id="about-title">About Us</h2>
+        <p className="about-copy">Yantra Media is a creative and technology driven agency delivering innovative solutions in branding, digital marketing, UI/UX, web development, performance marketing, and technology.</p>
+      </Reveal>
+      <Reveal className="about-media" y={30}><img src={`${A}/about-media.png`} alt="Social media content showreel" /></Reveal>
+      <AnimatePresence initial={false}>
+        {!open && (
+          <motion.div className="know-more-wrap" exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }}>
+            <motion.button type="button" className="know-more" aria-expanded={open} aria-controls="about-more" onClick={() => setOpen(true)} whileTap={{ scale: 0.95 }}>
+              <span className="know-more-arrow" aria-hidden="true">&gt;</span>
+              Know More
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <Expand open={open}>
+        <div id="about-more">
           <div className="founder">
             <div className="founder-photo"><img src={`${A}/founder.png`} alt="Saptarshi Purkayastha" /></div>
             <div>
@@ -228,28 +238,27 @@ function About() {
               </a>
             </div>
           </div>
-        </Expand>
-        <motion.button type="button" className="know-more" aria-expanded={open} onClick={() => setOpen((o) => !o)} whileTap={{ scale: 0.95 }}>
-          <motion.span className="know-more-arrow" aria-hidden="true" animate={{ rotate: open ? -90 : 90 }}>&gt;</motion.span>
-          {open ? "Show Less" : "Know More"}
-        </motion.button>
-      </section>
-      <Expand open={open}>
-        <div className="celebrating">
-          <p className="celebrating-kicker">CELEBRATING</p>
-          <img src={`${A}/six-years.png`} alt="6 Years Yantramedia — 2020–26" />
-          <p className="celebrating-copy">6 Years of Yantra Media — Empowering Growth Through Technology, Creativity &amp; Innovation.</p>
-        </div>
-        <div className="awards">
-          <h2 className="title-grey">Awards &amp; Recognitions</h2>
-          <div className="awards-collage">
-            <div className="award award--1"><Crop src={`${A}/award-1.png`} alt="Indian Awards trophy" crop={{ w: "100.16%", h: "157.38%", l: "-0.08%", t: "0" }} /></div>
-            <div className="award award--2"><Crop src={`${A}/award-2.png`} alt="Receiving an award" crop={{ w: "187.73%", h: "147.42%", l: "-43.72%", t: "0.17%" }} /></div>
-            <div className="award award--3"><img src={`${A}/award-3.png`} alt="Tech Digital Marketing Awards 2025 certificate" /></div>
+          <div className="celebrating">
+            <p className="celebrating-kicker">CELEBRATING</p>
+            <img src={`${A}/six-years.png`} alt="6 Years Yantramedia — 2020–26" />
+            <p className="celebrating-copy">6 Years of Yantra Media — Empowering Growth Through Technology, Creativity &amp; Innovation.</p>
+          </div>
+          <div className="awards">
+            <h2 className="title-grey">Awards &amp; Recognitions</h2>
+            <div className="awards-collage">
+              <div className="award award--1"><Crop src={`${A}/award-1.png`} alt="Indian Awards trophy" crop={{ w: "100.16%", h: "157.38%", l: "-0.08%", t: "0" }} /></div>
+              <div className="award award--2"><Crop src={`${A}/award-2.png`} alt="Receiving an award" crop={{ w: "187.73%", h: "147.42%", l: "-43.72%", t: "0.17%" }} /></div>
+              <div className="award award--3"><img src={`${A}/award-3.png`} alt="Tech Digital Marketing Awards 2025 certificate" /></div>
+            </div>
+          </div>
+          <div className="team-photo">
+            <img src={`${A}/team.png`} alt="Team Yantra Media" />
+            <span className="team-vignette" aria-hidden="true" />
+            <span className="team-caption">Team Yantra Media</span>
           </div>
         </div>
       </Expand>
-    </>
+    </section>
   );
 }
 
