@@ -1,11 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
+import { Volume2, VolumeX } from "lucide-react";
 import { Counter, Crop, Dots, EnquirySheet, NavButton, Reveal, useSnapCarousel } from "@/components/landing/primitives";
 
 const A = "/figma";
-const INSTAGRAM_URL = "https://www.instagram.com/";
+const INSTAGRAM_URL = "https://www.instagram.com/yantramedia/";
 
 // pad/gap: design spacing above each label and below it to the divider
 const services = [
@@ -31,8 +32,9 @@ const featuredWorks = [
 ];
 
 const clientWorks = [
-  { src: `${A}/client-work-1.png`, alt: "Kiswah launch video" },
-  { src: `${A}/client-work-2.png`, alt: "Client mobile website video" },
+  { src: "/videos/kiswah-launch.mp4", poster: "/videos/kiswah-launch.jpg", title: "Kiswah Perfumes launch video" },
+  { src: "/videos/abstract-technologies-website.mp4", poster: "/videos/abstract-technologies-website.jpg", title: "Abstract Technologies website reveal" },
+  { src: "/videos/yantra-business-website.mp4", poster: "/videos/yantra-business-website.jpg", title: "Dynamic business website showcase" },
 ];
 
 const testimonials = [
@@ -45,13 +47,14 @@ const testimonials = [
 
 const industries = ["HealthCare", "E-Commerce", "Jewellery", "Enterprise", "Banking", "Insurance", "RealEstate", "Automobile", "Corporate", "Hotel’s", "Solar Power", "Education", "NGO", "News Portals"];
 
+// h: row height, dx/dy: text offset from the number — the design spaces these unevenly
 const workflow = [
-  <>Client Briefing &amp;<br />Requirement Mapping</>,
-  <>Research &amp;<br />Planning</>,
-  <>Wireframing &amp;<br />Content Structuring</>,
-  <>User Experience &amp;<br />Interface Design</>,
-  <>Development &amp;<br />Integration</>,
-  <>User Experience &amp;<br />Interface Design</>,
+  { text: <>Client Briefing &amp;<br />Requirement Mapping</>, h: 115, dx: 73, dy: 33 },
+  { text: <>Research &amp;<br />Planning</>, h: 105, dx: 73, dy: 41 },
+  { text: <>Wireframing &amp;<br />Content Structuring</>, h: 111, dx: 73, dy: 33 },
+  { text: <>User Experience &amp;<br />Interface Design</>, h: 120, dx: 85, dy: 41 },
+  { text: <>Development &amp;<br />Integration</>, h: 116, dx: 84, dy: 38 },
+  { text: <>User Experience &amp;<br />Interface Design</>, h: 125, dx: 83, dy: 40 },
 ];
 
 const otherServices = ["Brand Identity", "Social Media Marketing", "Website Design and Development", "Video Production", "Visual Designing", "2D and 3D Animation", "Mobile Apps", "Digital Marketing"];
@@ -118,18 +121,68 @@ function FeaturedWorks() {
   );
 }
 
+/** Muted, looping reel that plays while at least half of it is on screen. Tap to pause, speaker to unmute. */
+function VideoCard({ src, poster, title }: { src: string; poster: string; title: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [muted, setMuted] = useState(true);
+  const [playing, setPlaying] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = true;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !video.dataset.userPaused) video.play().catch(() => {});
+      else video.pause();
+    }, { threshold: 0.5 });
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
+  const togglePlay = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) { delete video.dataset.userPaused; video.play().catch(() => {}); }
+    else { video.dataset.userPaused = "1"; video.pause(); }
+  };
+
+  const toggleMute = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = !video.muted;
+    setMuted(video.muted);
+    if (!video.muted && video.paused) { delete video.dataset.userPaused; video.play().catch(() => {}); }
+  };
+
+  return (
+    <div className="video-card">
+      <video
+        ref={videoRef} src={src} poster={poster} aria-label={title}
+        muted loop playsInline preload="none"
+        onClick={togglePlay}
+        onPlay={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
+      />
+      {!playing && (
+        <button type="button" className="video-play" onClick={togglePlay} aria-label={`Play ${title}`}>
+          <img className="play-icon" src={`${A}/play-icon.svg`} alt="" width={71} height={80} />
+        </button>
+      )}
+      <button type="button" className="video-mute" onClick={toggleMute} aria-label={muted ? `Unmute ${title}` : `Mute ${title}`} aria-pressed={!muted}>
+        {muted ? <VolumeX aria-hidden="true" /> : <Volume2 aria-hidden="true" />}
+      </button>
+    </div>
+  );
+}
+
 function ClientWorks() {
   const { trackRef, index, onScroll, goTo } = useSnapCarousel(clientWorks.length);
   return (
     <section className="client-works" aria-labelledby="works-title">
       <Reveal><h2 id="works-title" className="title-grey works-title">Some of our client works</h2></Reveal>
       <div className="snap-track works-track" ref={trackRef} onScroll={onScroll}>
-        {clientWorks.map((slide) => (
-          <div className="video-card" key={slide.src}>
-            <img src={slide.src} alt={slide.alt} />
-            <img className="play-icon" src={`${A}/play-icon.svg`} alt="" width={71} height={80} />
-          </div>
-        ))}
+        {clientWorks.map((video) => <VideoCard key={video.src} {...video} />)}
       </div>
       <SlideControls count={clientWorks.length} index={index} goTo={goTo} label="client work" className="controls--works" />
     </section>
@@ -317,9 +370,12 @@ export default function Home() {
           <Reveal><h2 id="workflow-title">Our Proven Workflow</h2></Reveal>
           <ol>
             {workflow.map((step, index) => (
-              <Reveal key={index} x={-30} y={0} delay={0.05}>
-                <li><span className="step-num">{index + 1}</span><span className="step-text">{step}</span></li>
-              </Reveal>
+              <motion.li
+                key={index} style={{ "--h": step.h, "--dx": step.dx, "--dy": step.dy } as React.CSSProperties}
+                initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.7, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <span className="step-num">{index + 1}</span><span className="step-text">{step.text}</span>
+              </motion.li>
             ))}
           </ol>
         </section>

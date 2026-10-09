@@ -62,14 +62,15 @@ ul, ol { list-style: none; }
 .marquee { overflow: hidden; margin-top: calc(37 * var(--u)); }
 .marquee-track { display: flex; width: max-content; margin-left: calc(35 * var(--u)); animation: marquee 18s linear infinite; }
 .marquee--reverse .marquee-track { margin-left: calc(13 * var(--u)); animation-direction: reverse; animation-duration: 22s; }
-.marquee-set { display: flex; align-items: center; gap: calc(30 * var(--u)); padding-right: calc(30 * var(--u)); }
+.marquee-set { display: flex; align-items: flex-start; gap: calc(30 * var(--u)); padding-right: calc(30 * var(--u)); }
 .marquee--reverse .logo--fortis, .marquee--reverse .logo--mistral { order: 2; }
 .logo { flex: none; object-fit: cover; }
 .logo--fortis { width: calc(141 * var(--u)); height: calc(79 * var(--u)); }
-.logo--mistral { position: relative; width: calc(222.2 * var(--u)); height: calc(48 * var(--u)); }
+/* Per-logo top offsets from the design (row tops: Fortis / CSB). */
+.logo--mistral { margin-top: calc(25 * var(--u)); position: relative; width: calc(222.2 * var(--u)); height: calc(48 * var(--u)); }
 .mistral-mask { position: absolute; left: 0; top: 0; width: calc(136.886 * var(--u)); height: calc(40.345 * var(--u)); }
 .mistral-word { position: absolute; left: calc(85.36 * var(--u)); top: calc(3.09 * var(--u)); width: calc(136.822 * var(--u)); height: calc(44.689 * var(--u)); }
-.logo--indrive { width: calc(203 * var(--u)); height: calc(58 * var(--u)); }
+.logo--indrive { margin-top: calc(6 * var(--u)); width: calc(203 * var(--u)); height: calc(58 * var(--u)); }
 .logo--csb { width: calc(210.154 * var(--u)); height: calc(70.458 * var(--u)); }
 @keyframes marquee { to { transform: translateX(-50%); } }
 
@@ -96,7 +97,11 @@ ul, ol { list-style: none; }
 .works-title { padding-left: calc(39 * var(--u)); text-align: left; }
 .works-track { margin-top: calc(31 * var(--u)); gap: calc(16 * var(--u)); padding: 0 calc(21 * var(--u)); scroll-padding-left: calc(21 * var(--u)); }
 .video-card { position: relative; width: calc(304 * var(--u)); height: calc(543 * var(--u)); border-radius: calc(15 * var(--u)); overflow: hidden; }
-.video-card > img:first-child { width: 100%; height: 100%; object-fit: cover; }
+.video-card { background: #000; }
+.video-card video { display: block; width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
+.video-play { position: absolute; inset: 0; border: 0; padding: 0; background: transparent; }
+.video-mute { position: absolute; right: calc(12 * var(--u)); bottom: calc(12 * var(--u)); width: calc(34 * var(--u)); height: calc(34 * var(--u)); display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: rgba(0,0,0,.45); color: #fff; backdrop-filter: blur(4px); }
+.video-mute svg { width: calc(18 * var(--u)); height: calc(18 * var(--u)); }
 .play-icon { position: absolute; left: 50%; top: 50%; width: calc(71 * var(--u)); height: calc(80 * var(--u)); translate: -50% -50%; animation: pulse 2.4s ease-in-out infinite; }
 @keyframes pulse { 0%, 100% { scale: 1; opacity: 1; } 50% { scale: 1.12; opacity: .8; } }
 .controls--works { margin-top: calc(52 * var(--u)); padding: 0 calc(35 * var(--u)) 0 calc(12 * var(--u)); }
@@ -109,13 +114,13 @@ ul, ol { list-style: none; }
 /* Workflow */
 .workflow { padding-top: calc(48 * var(--u)); }
 .workflow h2 { padding-left: calc(49 * var(--u)); font-family: var(--poppins); font-weight: 400; font-size: calc(30 * var(--u)); }
-.workflow ol { margin-top: calc(-3 * var(--u)); padding-left: calc(39 * var(--u)); }
-.workflow li { display: grid; grid-template-columns: minmax(calc(73 * var(--u)), max-content) 1fr; align-items: center; height: calc(114 * var(--u)); }
-.step-num { padding-right: calc(23 * var(--u)); font-family: var(--poppins); font-weight: 700; font-size: calc(96 * var(--u)); line-height: 1; background: linear-gradient(180deg, #c2ff1c, #2c5512); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.step-text { font-family: var(--poppins); font-size: calc(20 * var(--u)); line-height: calc(30 * var(--u)); }
+.workflow ol { margin-top: calc(-9 * var(--u)); padding-left: calc(39 * var(--u)); }
+.workflow li { position: relative; height: calc(var(--h) * var(--u)); }
+.step-num { position: absolute; left: 0; top: 0; font-family: var(--poppins); font-weight: 700; font-size: calc(96 * var(--u)); line-height: calc(125 * var(--u)); background: linear-gradient(180deg, #c2ff1c, #2c5512); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.step-text { position: absolute; left: calc(var(--dx) * var(--u)); top: calc(var(--dy) * var(--u)); width: calc(235 * var(--u)); font-family: var(--poppins); font-size: calc(20 * var(--u)); line-height: calc(30 * var(--u)); }
 
 /* E-commerce banner */
-.ecom { position: relative; margin-top: calc(18 * var(--u)); height: calc(277 * var(--u)); background: #000; color: #fff; overflow: hidden; }
+.ecom { position: relative; margin-top: calc(16 * var(--u)); height: calc(277 * var(--u)); background: #000; color: #fff; overflow: hidden; }
 .ecom-globe { position: absolute; left: calc(220 * var(--u)); top: calc(36 * var(--u)); width: calc(330 * var(--u)); height: calc(186 * var(--u)); object-fit: cover; }
 .ecom-copy { position: relative; padding: calc(44 * var(--u)) 0 0 calc(22 * var(--u)); }
 .ecom-copy h2 { width: calc(359 * var(--u)); font-family: var(--arial); font-weight: 400; font-size: calc(30 * var(--u)); line-height: 1.15; }
@@ -151,6 +156,9 @@ ul, ol { list-style: none; }
 .industries button { position: relative; width: calc(98 * var(--u)); height: calc(37 * var(--u)); border: 0; background: none; padding: 0; font-family: var(--redhat); font-size: calc(14 * var(--u)); white-space: nowrap; color: #d1d1d1; transition: color .3s; }
 .industries button.is-active { color: #79a96c; font-weight: 800; font-size: calc(16 * var(--u)); }
 .industry-name { position: relative; }
+.industries button:not(.is-active) .industry-name { top: calc(-2.5 * var(--u)); }
+/* The design's selected pill sits on a 115px box starting at the column edge; the last column keeps 98px so it stays on screen. */
+.industries button.is-active:not(:nth-child(3n)) { width: calc(115 * var(--u)); }
 .industry-pill { position: absolute; top: 0; bottom: 0; left: 50%; width: calc(107 * var(--u)); translate: -50% 0; border: 1px solid #9bbf91; border-radius: calc(10 * var(--u)); }
 
 /* About */
@@ -232,7 +240,7 @@ ul, ol { list-style: none; }
 .footer .footer-city { margin: calc(26 * var(--u)) 0 0 calc(5 * var(--u)); }
 .footer .footer-city + p { margin-left: calc(5 * var(--u)); width: calc(250 * var(--u)); font-size: calc(15 * var(--u)); line-height: 1.5; }
 .footer .footer-city--noida { margin-top: calc(18 * var(--u)); }
-.footer small { display: block; margin: calc(25 * var(--u)) 0 0 calc(-15 * var(--u)); font-size: calc(13 * var(--u)); }
+.footer small { display: block; margin: calc(22 * var(--u)) 0 0 calc(-15 * var(--u)); font-size: calc(13 * var(--u)); }
 
 /* Enquiry bottom sheet */
 .sheet-backdrop { position: fixed; inset: 0; z-index: 50; background: rgba(0,0,0,.5); display: flex; align-items: flex-end; justify-content: center; }
