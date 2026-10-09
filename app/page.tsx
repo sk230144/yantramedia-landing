@@ -291,23 +291,25 @@ function About() {
               </a>
             </div>
           </div>
-          <div className="celebrating">
-            <p className="celebrating-kicker">CELEBRATING</p>
-            <img src={`${A}/six-years.png`} alt="6 Years Yantramedia — 2020–26" />
-            <p className="celebrating-copy">6 Years of Yantra Media — Empowering Growth Through Technology, Creativity &amp; Innovation.</p>
-          </div>
-          <div className="awards">
-            <h2 className="title-grey">Awards &amp; Recognitions</h2>
-            <div className="awards-collage">
-              <div className="award award--1"><Crop src={`${A}/award-1.png`} alt="Indian Awards trophy" crop={{ w: "100.16%", h: "157.38%", l: "-0.08%", t: "0" }} /></div>
-              <div className="award award--2"><Crop src={`${A}/award-2.png`} alt="Receiving an award" crop={{ w: "187.73%", h: "147.42%", l: "-43.72%", t: "0.17%" }} /></div>
-              <div className="award award--3"><img src={`${A}/award-3.png`} alt="Tech Digital Marketing Awards 2025 certificate" /></div>
+          <div className="about-more-dark">
+            <div className="celebrating">
+              <p className="celebrating-kicker">CELEBRATING</p>
+              <img src={`${A}/six-years.png`} alt="6 Years Yantramedia — 2020–26" />
+              <p className="celebrating-copy">6 Years of Yantra Media — Empowering Growth Through Technology, Creativity &amp; Innovation.</p>
             </div>
-          </div>
-          <div className="team-photo">
-            <img src={`${A}/team.png`} alt="Team Yantra Media" />
-            <span className="team-vignette" aria-hidden="true" />
-            <span className="team-caption">Team Yantra Media</span>
+            <div className="awards">
+              <h2 className="title-grey">Awards &amp; Recognitions</h2>
+              <div className="awards-collage">
+                <div className="award award--1"><Crop src={`${A}/award-1.png`} alt="Indian Awards trophy" crop={{ w: "100.16%", h: "157.38%", l: "-0.08%", t: "0" }} /></div>
+                <div className="award award--2"><Crop src={`${A}/award-2.png`} alt="Receiving an award" crop={{ w: "187.73%", h: "147.42%", l: "-43.72%", t: "0.17%" }} /></div>
+                <div className="award award--3"><img src={`${A}/award-3.png`} alt="Tech Digital Marketing Awards 2025 certificate" /></div>
+              </div>
+            </div>
+            <div className="team-photo">
+              <img src={`${A}/team.png`} alt="Team Yantra Media" />
+              <span className="team-vignette" aria-hidden="true" />
+              <span className="team-caption">Team Yantra Media</span>
+            </div>
           </div>
         </div>
       </Expand>

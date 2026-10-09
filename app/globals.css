@@ -172,7 +172,7 @@ ul, ol { list-style: none; }
 .know-more-wrap { overflow: hidden; padding: calc(36 * var(--u)) 0 calc(31 * var(--u)); }
 .know-more { display: flex; align-items: center; margin-left: calc(130 * var(--u)); width: calc(154 * var(--u)); height: calc(35 * var(--u)); padding: 0 0 0 calc(15 * var(--u)); border: 0; border-radius: calc(6 * var(--u)); background: #fff; color: #000; font-size: calc(15 * var(--u)); }
 .know-more-arrow { display: inline-block; width: calc(31 * var(--u)); font-family: var(--redhat); font-weight: 300; font-size: calc(25 * var(--u)); line-height: 1; text-align: left; transform: rotate(90deg); transform-origin: calc(8 * var(--u)) 50%; }
-.founder { display: flex; padding: calc(81 * var(--u)) 0 0 calc(32 * var(--u)); }
+.founder { display: flex; padding: calc(81 * var(--u)) 0 calc(82 * var(--u)) calc(32 * var(--u)); }
 .founder-photo { position: relative; flex: none; width: calc(112.298 * var(--u)); height: calc(113 * var(--u)); border-radius: 50%; overflow: hidden; margin-right: calc(21.7 * var(--u)); }
 .founder-photo img { position: absolute; left: calc(-14.739 * var(--u)); top: calc(-16.143 * var(--u)); width: calc(129.143 * var(--u)); height: calc(129.143 * var(--u)); object-fit: cover; }
 .founder h3 { margin-top: calc(5 * var(--u)); font-weight: 400; font-size: calc(20 * var(--u)); }
@@ -182,7 +182,9 @@ ul, ol { list-style: none; }
 .linkedin-logo { width: calc(63 * var(--u)); height: calc(21 * var(--u)); }
 
 /* Revealed by "Know More": celebrating, awards and team photo */
-.celebrating { padding-top: calc(151 * var(--u)); text-align: center; }
+/* Below the founder the design switches to #1e1e1e, which keeps the black "Yantramedia" text in the 6-years logo readable. */
+.about-more-dark { background: #1e1e1e; }
+.celebrating { padding-top: calc(69 * var(--u)); text-align: center; }
 .celebrating-kicker { font-weight: 700; font-size: calc(18 * var(--u)); letter-spacing: calc(14.4 * var(--u)); color: #d9a223; margin-right: calc(-14.4 * var(--u)); }
 .celebrating img { width: calc(196 * var(--u)); height: calc(136 * var(--u)); object-fit: cover; margin: calc(12 * var(--u)) auto 0; }
 .celebrating-copy { width: calc(306 * var(--u)); margin: calc(9 * var(--u)) auto 0; font-size: calc(15 * var(--u)); color: #d9a223; }
