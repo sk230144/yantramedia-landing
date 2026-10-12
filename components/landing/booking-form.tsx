@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, ChevronDown, X } from "lucide-react";
+import emailjs from "@emailjs/browser";
 
 type Lang = "en" | "hi";
 
@@ -118,6 +119,9 @@ const fields: Field[] = [
 
 const MIN_BUSINESS_WORDS = 20;
 export const FROM_HOME_KEY = "ym-book-from-home";
+const EMAILJS_SERVICE_ID = "service_b2sh7c9";
+const EMAILJS_TEMPLATE_ID = "template_zdq1ej4";
+const EMAILJS_PUBLIC_KEY = "0pr8gM3XYO1v_x3zn";
 
 const pos = (x: number, y: number) => ({ "--x": x, "--y": y }) as React.CSSProperties;
 
@@ -165,7 +169,10 @@ function LanguagePicker({ lang, onChange, label }: { lang: Lang; onChange: (l: L
 
 export function BookingForm() {
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [lang, setLang] = useState<Lang>("en");
   const t = copy[lang];
 
@@ -183,10 +190,28 @@ export function BookingForm() {
     el.setCustomValidity(words >= MIN_BUSINESS_WORDS ? "" : t.minWords(words));
   }
 
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSent(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (!formRef.current || submitting) return;
+
+    setSubmitting(true);
+    setSubmitError("");
+
+    try {
+      await emailjs.sendForm(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        formRef.current,
+        { publicKey: EMAILJS_PUBLIC_KEY },
+      );
+      setSent(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (error) {
+      console.error("EmailJS submission failed", error);
+      setSubmitError(lang === "hi" ? "जानकारी भेजी नहीं जा सकी। कृपया फिर से प्रयास करें।" : "We couldn't send your details. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -207,7 +232,7 @@ export function BookingForm() {
           <button type="button" onClick={close} className="book-submit book-done-home">{t.doneHome}</button>
         </motion.section>
       ) : (
-        <form onSubmit={submit} className="book-form">
+        <form ref={formRef} onSubmit={submit} className="book-form">
           <LanguagePicker lang={lang} onChange={setLang} label={t.readIn} />
 
           <div className="book-intro" style={pos(59, 154.3)}>
@@ -237,7 +262,10 @@ export function BookingForm() {
             <span>{t.consent}</span>
           </label>
 
-          <motion.button type="submit" className="book-submit" style={pos(26, 2410)} whileTap={{ scale: 0.98 }}>{t.submit}</motion.button>
+          <motion.button type="submit" disabled={submitting} aria-busy={submitting} className="book-submit" style={pos(26, 2410)} whileTap={{ scale: 0.98 }}>
+            {submitting ? (lang === "hi" ? "भेजा जा रहा है..." : "Sending...") : t.submit}
+          </motion.button>
+          {submitError && <p className="book-submit-error" style={pos(31, 2491)} role="alert">{submitError}</p>}
         </form>
       )}
     </main>

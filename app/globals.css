@@ -283,6 +283,8 @@ ul, ol { list-style: none; }
 .book-consent span { padding-top: 0; font-size: calc(14.4 * var(--v)); line-height: calc(17 * var(--v)); }
 /* The design places the button label left of centre (68px in); kept as drawn. */
 .book-submit { display: flex; align-items: center; width: calc(383 * var(--v)); height: calc(69 * var(--v)); padding: 0 0 0 calc(66.9 * var(--v)); border: 0; border-radius: calc(12 * var(--v)); background: #5db45a; color: #fff; font-family: var(--arial); font-weight: 700; font-size: calc(19 * var(--v)); cursor: pointer; }
+.book-submit:disabled { cursor: wait; opacity: .7; }
+.book-submit-error { width: calc(368 * var(--v)); margin: 0; color: #b42318; font-size: calc(14 * var(--v)); line-height: calc(18 * var(--v)); }
 .book-done { padding: calc(140 * var(--v)) calc(31 * var(--v)) 0; color: #8d7f7f; }
 .book-done h1 { font-size: calc(30 * var(--v)); color: #3f3a3a; }
 .book-done p { margin-top: calc(14 * var(--v)); font-size: calc(18 * var(--v)); line-height: calc(24 * var(--v)); }
