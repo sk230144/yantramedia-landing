@@ -15,3 +15,6 @@ export function runWithConnectorBinding<T>(
 export function getConnectorBinding(): ConnectorBinding | undefined {
   return bindings.getStore();
 }
+
+
+
