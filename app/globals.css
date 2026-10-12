@@ -140,7 +140,7 @@ ul, ol { list-style: none; }
 .industries-title { width: calc(299 * var(--u)); margin-left: calc(52 * var(--u)); text-align: center; font-family: var(--redhat); font-weight: 400; font-size: calc(25 * var(--u)); line-height: calc(33 * var(--u)); color: var(--grey); }
 /* Column boxes at x 13 / 157 / 290 (98 wide) as in the design; the last row sits 2px lower. */
 .industries { align-items: start; display: grid; grid-template-columns: calc(144 * var(--u)) calc(133 * var(--u)) calc(98 * var(--u)); grid-auto-rows: calc(44 * var(--u)); margin-top: calc(47 * var(--u)); padding-left: calc(13 * var(--u)); }
-.industries li { width: calc(98 * var(--u)); text-align: center; white-space: nowrap; font-family: var(--redhat); font-size: calc(14 * var(--u)); line-height: calc(17.54 * var(--u)); color: #d1d1d1; }
+.industries li { width: calc(98 * var(--u)); text-align: center; white-space: nowrap; font-family: var(--redhat); font-size: calc(14 * var(--u)); line-height: calc(17.54 * var(--u)); color: #3a3535; }
 .industries li:first-child { translate: calc(7 * var(--u)) 0; }
 .industries li:nth-child(n+13) { margin-top: calc(2 * var(--u)); }
 

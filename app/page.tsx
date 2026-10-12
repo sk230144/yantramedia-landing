@@ -43,18 +43,17 @@ const clientWorks = [
   { id: "RHwEt4-VTjk", title: "Behind the new Kiswah Perfumes website" },
 ];
 
-// Paired in the order given: quote N, attribution N, photo N.
 const testimonials = [
-  { name: "Priya Sharma", role: "Marketing Manager", quote: "Yantra Media transformed our vision into a professional website. The design looks premium, and the experience is seamless." },
-  { name: "Amit Agarwal", role: "Managing Director", quote: "Clean design, smooth navigation, and a website that truly reflects our brand. Great work by the Yantra Media team!" },
-  { name: "Vikram Malhotra", role: "Chief Marketing Officer", quote: "Professional from start to finish. They understood our requirements and delivered a website aligned with our business goals." },
-  { name: "Neha Kapoor", role: "Founder & Director", quote: "Our new website communicates our value proposition much better. The UI/UX and brand presentation are excellent." },
-  { name: "Arjun Verma", role: "Digital Marketing Manager", quote: "Exactly the modern, elegant website we wanted. Yantra Media made the entire process simple and collaborative." },
-  { name: "Karan Bansal", role: "Co-Founder", quote: "The website is responsive, well-structured, and easy to navigate. A strong foundation for our digital marketing campaigns." },
-  { name: "Ananya Iyer", role: "Marketing Director", quote: "Great attention to detail! The team balanced creativity with functionality and delivered a website that feels truly professional." },
-  { name: "Rohit Khanna", role: "Founder & CEO", quote: "We wanted a fresh digital identity, and Yantra Media delivered a polished website that fits our brand perfectly." },
-  { name: "Siddharth Rao", role: "Chief Operating Officer", quote: "A reliable team with a clear understanding of business needs. Our website looks modern and works smoothly across devices." },
-].map((t, i) => ({ ...t, photo: `/testimonials/client-${String(i + 1).padStart(2, "0")}.jpg` }));
+  { name: "Priya Sharma", role: "Marketing Manager", quote: "Clean design, smooth navigation, and a website that truly reflects our brand. Great work by the Yantra Media team!", photo: "/testimonials/client-02.jpg" },
+  { name: "Amit Agarwal", role: "Managing Director", quote: "Professional from start to finish. They understood our requirements and delivered a website aligned with our business goals.", photo: "/testimonials/client-03.jpg" },
+  { name: "Vikram Malhotra", role: "Chief Marketing Officer", quote: "Our new website communicates our value proposition much better. The UI/UX and brand presentation are excellent.", photo: "/testimonials/client-04.jpg" },
+  { name: "Neha Kapoor", role: "Founder & Director", quote: "Exactly the modern, elegant website we wanted. Yantra Media made the entire process simple and collaborative.", photo: "/testimonials/client-05.jpg" },
+  { name: "Arjun Verma", role: "Digital Marketing Manager", quote: "The website is responsive, well-structured, and easy to navigate. A strong foundation for our digital marketing campaigns.", photo: "/testimonials/client-06.jpg" },
+  { name: "Karan Bansal", role: "Co-Founder", quote: "Great attention to detail! The team balanced creativity with functionality and delivered a website that feels truly professional.", photo: "/testimonials/karan-bansal.png" },
+  { name: "Ananya Iyer", role: "Marketing Director", quote: "We wanted a fresh digital identity, and Yantra Media delivered a polished website that fits our brand perfectly.", photo: "/testimonials/client-07.jpg" },
+  { name: "Rohit Khanna", role: "Founder & CEO", quote: "A reliable team with a clear understanding of business needs. Our website looks modern and works smoothly across devices.", photo: "/testimonials/client-08.jpg" },
+  { name: "Siddharth Rao", role: "Chief Operating Officer", quote: "The project was handled systematically, with clear communication and attention to functionality. A smooth overall experience.", photo: "/testimonials/client-09.jpg" },
+];
 
 const industries = ["Health Care", "E-Commerce", "Jewellery", "Enterprise", "Banking", "Insurance", "RealEstate", "Automobile", "Corporate", "Hotel’s", "Solar Power", "Education", "NGO", "News Portals"];
 
