@@ -1,12 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { Volume2, VolumeX } from "lucide-react";
-import { Counter, Crop, Dots, EnquirySheet, NavButton, Reveal, useSnapCarousel } from "@/components/landing/primitives";
+import { Counter, Crop, Dots, NavButton, Reveal, useSnapCarousel } from "@/components/landing/primitives";
+import { FROM_HOME_KEY } from "@/components/landing/booking-form";
 
 const A = "/figma";
-const INSTAGRAM_URL = "https://www.instagram.com/yantramedia/";
 
 // pad/gap: design spacing above each label and below it to the divider
 const services = [
@@ -31,21 +32,31 @@ const featuredWorks = [
   { src: `${A}/works/09-mediland-app.jpg`, alt: "Mediland doctor booking mobile app design" },
 ];
 
+// YouTube Shorts from the Yantra Media channel.
 const clientWorks = [
-  { src: "/videos/kiswah-launch.mp4", poster: "/videos/kiswah-launch.jpg", title: "Kiswah Perfumes launch video" },
-  { src: "/videos/abstract-technologies-website.mp4", poster: "/videos/abstract-technologies-website.jpg", title: "Abstract Technologies website reveal" },
-  { src: "/videos/yantra-business-website.mp4", poster: "/videos/yantra-business-website.jpg", title: "Dynamic business website showcase" },
+  { id: "47OIBCIXi9U", title: "Looking for a professional website that drives business growth?" },
+  { id: "nQnwKEBr1XY", title: "A brand new jewellery website experience, designed and developed by Yantra Media" },
+  { id: "8V0D9up2pcI", title: "Website design and development for e-commerce brand Sanmati Traders" },
+  { id: "PmU0TZyOCWY", title: "Website designed for The Taplow Group" },
+  { id: "odVCDtFVbjQ", title: "Website design for Rudraksh Hotel" },
+  { id: "zim28_JgmqI", title: "Website designed for Life Save Hospital" },
+  { id: "RHwEt4-VTjk", title: "Behind the new Kiswah Perfumes website" },
 ];
 
+// Paired in the order given: quote N, attribution N, photo N.
 const testimonials = [
-  {
-    name: "Dr.Kinnor Das",
-    role: "CEO CUTEX SKINCARE CLINIC",
-    quote: <>Yantra media has done a very good website<br />we highly recommend Yantra will all our efforts<br />and we insits to get every website from them<br />team is professional and Quick responce</>,
-  },
-];
+  { name: "Priya Sharma", role: "Marketing Manager", quote: "Yantra Media transformed our vision into a professional website. The design looks premium, and the experience is seamless." },
+  { name: "Amit Agarwal", role: "Managing Director", quote: "Clean design, smooth navigation, and a website that truly reflects our brand. Great work by the Yantra Media team!" },
+  { name: "Vikram Malhotra", role: "Chief Marketing Officer", quote: "Professional from start to finish. They understood our requirements and delivered a website aligned with our business goals." },
+  { name: "Neha Kapoor", role: "Founder & Director", quote: "Our new website communicates our value proposition much better. The UI/UX and brand presentation are excellent." },
+  { name: "Arjun Verma", role: "Digital Marketing Manager", quote: "Exactly the modern, elegant website we wanted. Yantra Media made the entire process simple and collaborative." },
+  { name: "Karan Bansal", role: "Co-Founder", quote: "The website is responsive, well-structured, and easy to navigate. A strong foundation for our digital marketing campaigns." },
+  { name: "Ananya Iyer", role: "Marketing Director", quote: "Great attention to detail! The team balanced creativity with functionality and delivered a website that feels truly professional." },
+  { name: "Rohit Khanna", role: "Founder & CEO", quote: "We wanted a fresh digital identity, and Yantra Media delivered a polished website that fits our brand perfectly." },
+  { name: "Siddharth Rao", role: "Chief Operating Officer", quote: "A reliable team with a clear understanding of business needs. Our website looks modern and works smoothly across devices." },
+].map((t, i) => ({ ...t, photo: `/testimonials/client-${String(i + 1).padStart(2, "0")}.jpg` }));
 
-const industries = ["HealthCare", "E-Commerce", "Jewellery", "Enterprise", "Banking", "Insurance", "RealEstate", "Automobile", "Corporate", "Hotel’s", "Solar Power", "Education", "NGO", "News Portals"];
+const industries = ["Health Care", "E-Commerce", "Jewellery", "Enterprise", "Banking", "Insurance", "RealEstate", "Automobile", "Corporate", "Hotel’s", "Solar Power", "Education", "NGO", "News Portals"];
 
 // h: row height, dx/dy: text offset from the number — the design spaces these unevenly
 const workflow = [
@@ -121,54 +132,73 @@ function FeaturedWorks() {
   );
 }
 
-/** Muted, looping reel that plays while at least half of it is on screen. Tap to pause, speaker to unmute. */
-function VideoCard({ src, poster, title }: { src: string; poster: string; title: string }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [muted, setMuted] = useState(true);
-  const [playing, setPlaying] = useState(false);
+const YT_ORIGIN = "https://www.youtube-nocookie.com";
 
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    video.muted = true;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !video.dataset.userPaused) video.play().catch(() => {});
-      else video.pause();
-    }, { threshold: 0.5 });
-    observer.observe(video);
-    return () => observer.disconnect();
+/**
+ * YouTube Short in a design-sized card. The player is created when the card first comes into view and
+ * autoplays muted on loop; it pauses off-screen. A transparent layer sits over the iframe so horizontal
+ * swipes still move the carousel (the YouTube player would otherwise swallow them); tapping it toggles play.
+ */
+function VideoCard({ id, title }: { id: string; title: string }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLIFrameElement>(null);
+  const userPaused = useRef(false);
+  const [mounted, setMounted] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const [muted, setMuted] = useState(true);
+
+  const command = useCallback((func: string) => {
+    frameRef.current?.contentWindow?.postMessage(JSON.stringify({ event: "command", func, args: [] }), YT_ORIGIN);
   }, []);
 
+  useEffect(() => {
+    const card = cardRef.current;
+    if (!card) return;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        if (!reduceMotion) setMounted(true);
+        if (!userPaused.current) command("playVideo");
+      } else {
+        command("pauseVideo");
+      }
+    }, { threshold: 0.5 });
+    observer.observe(card);
+    return () => observer.disconnect();
+  }, [command]);
+
   const togglePlay = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (video.paused) { delete video.dataset.userPaused; video.play().catch(() => {}); }
-    else { video.dataset.userPaused = "1"; video.pause(); }
+    if (!mounted) { setMounted(true); return; }
+    const next = !paused;
+    userPaused.current = next;
+    setPaused(next);
+    command(next ? "pauseVideo" : "playVideo");
   };
 
   const toggleMute = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    video.muted = !video.muted;
-    setMuted(video.muted);
-    if (!video.muted && video.paused) { delete video.dataset.userPaused; video.play().catch(() => {}); }
+    if (!mounted) setMounted(true);
+    const next = !muted;
+    setMuted(next);
+    command(next ? "mute" : "unMute");
+    if (!next && paused) { userPaused.current = false; setPaused(false); command("playVideo"); }
   };
 
+  const src = `${YT_ORIGIN}/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&playsinline=1&controls=0&rel=0&modestbranding=1&iv_load_policy=3&enablejsapi=1`;
+
   return (
-    <div className="video-card">
-      <video
-        ref={videoRef} src={src} poster={poster} aria-label={title}
-        muted loop playsInline preload="none"
-        onClick={togglePlay}
-        onPlay={() => setPlaying(true)}
-        onPause={() => setPlaying(false)}
-      />
-      {!playing && (
-        <button type="button" className="video-play" onClick={togglePlay} aria-label={`Play ${title}`}>
-          <img className="play-icon" src={`${A}/play-icon.svg`} alt="" width={71} height={80} />
-        </button>
+    <div className="video-card" ref={cardRef}>
+      <img className="video-thumb" src={`https://i.ytimg.com/vi/${id}/oar2.jpg`} alt="" loading="lazy" />
+      {mounted && (
+        <iframe
+          ref={frameRef} src={src} title={title} className={loaded ? "is-loaded" : ""}
+          allow="autoplay; encrypted-media; picture-in-picture" referrerPolicy="strict-origin-when-cross-origin"
+          tabIndex={-1} onLoad={() => setLoaded(true)}
+        />
       )}
+      <button type="button" className="video-play" onClick={togglePlay} aria-label={`${!mounted || paused ? "Play" : "Pause"} ${title}`}>
+        {(!mounted || paused) && <img className="play-icon" src={`${A}/play-icon.svg`} alt="" width={71} height={80} />}
+      </button>
       <button type="button" className="video-mute" onClick={toggleMute} aria-label={muted ? `Unmute ${title}` : `Mute ${title}`} aria-pressed={!muted}>
         {muted ? <VolumeX aria-hidden="true" /> : <Volume2 aria-hidden="true" />}
       </button>
@@ -182,7 +212,7 @@ function ClientWorks() {
     <section className="client-works" aria-labelledby="works-title">
       <Reveal><h2 id="works-title" className="title-grey works-title">Some of our client works</h2></Reveal>
       <div className="snap-track works-track" ref={trackRef} onScroll={onScroll}>
-        {clientWorks.map((video) => <VideoCard key={video.src} {...video} />)}
+        {clientWorks.map((video) => <VideoCard key={video.id} {...video} />)}
       </div>
       <SlideControls count={clientWorks.length} index={index} goTo={goTo} label="client work" className="controls--works" />
     </section>
@@ -191,59 +221,46 @@ function ClientWorks() {
 
 function Testimonials() {
   const { trackRef, index, onScroll, goTo } = useSnapCarousel(testimonials.length);
+  const [autoplay, setAutoplay] = useState(true);
+  const stop = () => setAutoplay(false);
+
+  // Auto-advance every 5s until the visitor swipes or taps a dot.
+  useEffect(() => {
+    if (!autoplay || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timer = window.setTimeout(() => goTo((index + 1) % testimonials.length), 5000);
+    return () => window.clearTimeout(timer);
+  }, [autoplay, index, goTo]);
+
   return (
     <section className="testimonials" aria-label="What our clients say">
-      <div className="snap-track testimonial-track" ref={trackRef} onScroll={onScroll}>
+      <div className="snap-track testimonial-track" ref={trackRef} onScroll={onScroll} onPointerDown={stop}>
         {testimonials.map((t) => (
-          <Reveal className="testimonial-card" key={t.name} y={30}>
-            <img className="testimonial-avatar" src={`${A}/avatar-placeholder.svg`} alt="" width={72} height={72} />
-            <p className="testimonial-name">{t.name}</p>
-            <p className="testimonial-role">{t.role}</p>
-            <p className="testimonial-quote">{t.quote}</p>
-          </Reveal>
+          <figure className="testimonial-card" key={t.name}>
+            <blockquote className="testimonial-quote">“{t.quote}”</blockquote>
+            <figcaption>
+              <img className="testimonial-photo" src={t.photo} alt="" width={52} height={52} loading="lazy" />
+              <span className="testimonial-name">{t.name}</span>
+              <span className="testimonial-role">{t.role}</span>
+            </figcaption>
+          </figure>
         ))}
       </div>
-      <Dots count={testimonials.length} active={index} onSelect={goTo} label="Testimonials" />
+      <div onClickCapture={stop}><Dots count={testimonials.length} active={index} onSelect={goTo} label="Testimonials" /></div>
     </section>
   );
 }
 
 function Industries() {
-  const [active, setActive] = useState(0);
-  const go = (next: number) => setActive(Math.max(0, Math.min(industries.length - 1, next)));
-
   return (
     <section className="industries-section" aria-labelledby="industries-title">
-      <Reveal><h2 id="industries-title" className="industries-title">Explore some of our work across the industries we&apos;ve served.</h2></Reveal>
-      <Reveal className="computer" delay={0.1}>
-        <img className="computer-frame" src={`${A}/computer.png`} alt="" />
-        <div className="computer-screen">
-          <AnimatePresence initial={false}>
-            <motion.img
-              key={active} src={`${A}/computer-screen.png`} alt={`${industries[active]} website project`}
-              initial={{ opacity: 0, scale: 1.06 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            />
-          </AnimatePresence>
-        </div>
-      </Reveal>
-      <div className="controls controls--industry">
-        <NavButton dir="prev" label="Previous industry" disabled={active === 0} onClick={() => go(active - 1)} />
-        <div className="industry-label" aria-live="polite">
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.span key={active} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.22 }}>{industries[active]}</motion.span>
-          </AnimatePresence>
-        </div>
-        <NavButton dir="next" label="Next industry" disabled={active === industries.length - 1} onClick={() => go(active + 1)} />
-      </div>
-      <div className="industries" role="tablist" aria-label="Industries">
+      <Reveal><h2 id="industries-title" className="industries-title">We have collaborated with the industries</h2></Reveal>
+      <ul className="industries">
         {industries.map((name, index) => (
-          <button key={name} type="button" role="tab" aria-selected={index === active} className={index === active ? "is-active" : ""} onClick={() => setActive(index)}>
-            {index === active && <motion.span className="industry-pill" layoutId="industry-pill" transition={{ type: "spring", stiffness: 420, damping: 34 }} />}
-            <span className="industry-name">{name}</span>
-          </button>
+          <motion.li key={name} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: (index % 3) * 0.06 + Math.floor(index / 3) * 0.05 }}>
+            {name}
+          </motion.li>
         ))}
-      </div>
+      </ul>
     </section>
   );
 }
@@ -318,10 +335,6 @@ function About() {
 }
 
 export default function Home() {
-  const [sheetOpen, setSheetOpen] = useState(false);
-  const enquire = () => setSheetOpen(true);
-  const closeSheet = useCallback(() => setSheetOpen(false), []);
-
   return (
     <MotionConfig reducedMotion="user">
       <main className="page" id="home">
@@ -335,9 +348,6 @@ export default function Home() {
           <motion.div className="hero-devices" initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.9, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}>
             <motion.img src={`${A}/hero-devices.png`} alt="Sanmati Traders website shown on an iMac" animate={{ y: [0, -8, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} />
           </motion.div>
-          <motion.button type="button" className="enquire-btn" onClick={enquire} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65, duration: 0.6 }} whileTap={{ scale: 0.97 }}>
-            Enquire Now
-          </motion.button>
         </section>
 
         <section className="clients" aria-labelledby="clients-title">
@@ -363,11 +373,6 @@ export default function Home() {
         <FeaturedWorks />
         <ClientWorks />
 
-        <Reveal className="instagram" y={20}>
-          <p>Join our Instagram<br />Community</p>
-          <motion.a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="instagram-btn" whileTap={{ scale: 0.95 }}>Follow Us</motion.a>
-        </Reveal>
-
         <section className="workflow" aria-labelledby="workflow-title">
           <Reveal><h2 id="workflow-title">Our Proven Workflow</h2></Reveal>
           <ol>
@@ -390,19 +395,17 @@ export default function Home() {
         </section>
 
         <section className="seo" aria-labelledby="seo-title">
-          <Reveal><h2 id="seo-title">How Strategic SEO Drives Sales &amp; Generates More Google Calls</h2></Reveal>
+          <Reveal><h3 className="seo-kicker">Live Client Google My<br />Business Analytics</h3></Reveal>
           <Reveal className="seo-media" y={24}>
             <img src={`${A}/seo-video.png`} alt="Google Business Profile results for Jeevan Jyoti Institute of Medical Sciences" />
             <motion.img className="seo-play" src={`${A}/play-badge.svg`} alt="" width={87.1186} height={90.9464} animate={{ scale: [1, 1.08, 1] }} transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }} />
           </Reveal>
-          <p className="seo-caption">3 Over View</p>
+          <Reveal><h2 id="seo-title">Strategic SEO Drives Sales &amp; Generates More Google Calls</h2></Reveal>
           <Reveal className="seo-results">
-            <h3>What we have<br />Generated with SEO</h3>
             <p><Counter to={6000} suffix="+" /> Calls</p>
             <p><Counter to={1400} suffix="+" /> Website Enquiries</p>
             <p><Counter to={997} suffix="+" /> Directions</p>
           </Reveal>
-          <motion.button type="button" className="pill-btn seo-audit" onClick={enquire} whileTap={{ scale: 0.95 }}>Get a Free Audit &gt;</motion.button>
         </section>
 
         <Industries />
@@ -420,14 +423,21 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="brand-cta" aria-label="Contact Yantra Media">
-          <Reveal className="brand-row">
-            <img className="brand-mark" src={`${A}/ym-mark.gif`} alt="" />
-            <img className="brand-word" src={`${A}/yantra-wordmark.svg`} alt="Yantramedia" width={173.842} height={26.1685} />
-            <span className="brand-agency">Agency</span>
+        <section className="strategy-call" aria-labelledby="strategy-title">
+          <Reveal>
+            <h2 id="strategy-title">Book a Website Strategy Call With Our Expert’s</h2>
+            <p>You will have to fill a form, Our Team will get back to you!</p>
           </Reveal>
-          <motion.button type="button" className="callback-btn" onClick={enquire} whileTap={{ scale: 0.97 }}>Get a Call Back in 10 Mins</motion.button>
+          <motion.div className="appointment-wrap" whileTap={{ scale: 0.97 }}>
+            <Link href="/book" className="appointment-btn" onClick={() => { try { sessionStorage.setItem(FROM_HOME_KEY, "1"); } catch {} }}>Book Your Appointment</Link>
+          </motion.div>
         </section>
+
+        <Reveal className="brand-row">
+          <img className="brand-mark" src={`${A}/ym-mark.gif`} alt="" />
+          <img className="brand-word" src={`${A}/yantra-wordmark.svg`} alt="Yantramedia" width={173.842} height={26.1685} />
+          <span className="brand-agency">Agency</span>
+        </Reveal>
 
         <footer className="footer" id="contact">
           <div className="footer-texture" aria-hidden="true"><img src={`${A}/footer-texture.png`} alt="" /></div>
@@ -443,7 +453,6 @@ export default function Home() {
           </div>
         </footer>
 
-        <EnquirySheet open={sheetOpen} onClose={closeSheet} />
       </main>
     </MotionConfig>
   );

@@ -1,7 +1,7 @@
 "use client";
 
-import { FormEvent, ReactNode, useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence, animate, motion, useInView, useReducedMotion } from "framer-motion";
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { animate, motion, useInView, useReducedMotion } from "framer-motion";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -90,55 +90,4 @@ export function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
   }, [inView, reduceMotion, to]);
 
   return <span ref={ref}>{value}{suffix}</span>;
-}
-
-export function EnquirySheet({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [sent, setSent] = useState(false);
-
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (event: KeyboardEvent) => event.key === "Escape" && onClose();
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", onKey);
-    return () => { document.body.style.overflow = previous; window.removeEventListener("keydown", onKey); };
-  }, [open, onClose]);
-
-  function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); setSent(true); }
-
-  return (
-    <AnimatePresence onExitComplete={() => setSent(false)}>
-      {open && (
-        <motion.div className="sheet-backdrop" onClick={onClose} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-          <motion.div
-            className="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title"
-            onClick={(event) => event.stopPropagation()}
-            initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
-            transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            drag="y" dragConstraints={{ top: 0, bottom: 0 }} dragElastic={{ top: 0, bottom: 0.6 }}
-            onDragEnd={(_, info) => { if (info.offset.y > 120) onClose(); }}
-          >
-            <span className="sheet-grip" aria-hidden="true" />
-            <button type="button" className="sheet-close" onClick={onClose} aria-label="Close">×</button>
-            {sent ? (
-              <div className="sheet-done">
-                <h2 id="sheet-title">Thank you!</h2>
-                <p>Our team will call you back shortly.</p>
-                <button type="button" className="sheet-submit" onClick={onClose}>Done</button>
-              </div>
-            ) : (
-              <form onSubmit={submit}>
-                <h2 id="sheet-title">Get a Call Back</h2>
-                <p>Tell us a little about your project.</p>
-                <label><span className="sr-only">Your name</span><input name="name" placeholder="Your name" autoComplete="name" required /></label>
-                <label><span className="sr-only">Phone number</span><input name="phone" type="tel" placeholder="Phone number" autoComplete="tel" required /></label>
-                <label><span className="sr-only">Your requirement</span><textarea name="message" placeholder="Your requirement" rows={3} /></label>
-                <button type="submit" className="sheet-submit">Enquire Now</button>
-              </form>
-            )}
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
 }
