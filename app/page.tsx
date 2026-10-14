@@ -138,7 +138,7 @@ const YT_ORIGIN = "https://www.youtube-nocookie.com";
  * autoplays muted on loop; it pauses off-screen. A transparent layer sits over the iframe so horizontal
  * swipes still move the carousel (the YouTube player would otherwise swallow them); tapping it toggles play.
  */
-function VideoCard({ id, title }: { id: string; title: string }) {
+function VideoCard({ id, title, thumb = "oar2", className = "" }: { id: string; title: string; thumb?: string; className?: string }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLIFrameElement>(null);
   const userPaused = useRef(false);
@@ -186,8 +186,8 @@ function VideoCard({ id, title }: { id: string; title: string }) {
   const src = `${YT_ORIGIN}/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&playsinline=1&controls=0&rel=0&modestbranding=1&iv_load_policy=3&enablejsapi=1`;
 
   return (
-    <div className="video-card" ref={cardRef}>
-      <img className="video-thumb" src={`https://i.ytimg.com/vi/${id}/oar2.jpg`} alt="" loading="lazy" />
+    <div className={`video-card ${className}`} ref={cardRef}>
+      <img className="video-thumb" src={`https://i.ytimg.com/vi/${id}/${thumb}.jpg`} alt="" loading="lazy" />
       {mounted && (
         <iframe
           ref={frameRef} src={src} title={title} className={loaded ? "is-loaded" : ""}
@@ -284,7 +284,7 @@ function About() {
         <h2 id="about-title">About Us</h2>
         <p className="about-copy">Yantra Media is a creative and technology driven agency delivering innovative solutions in branding, digital marketing, UI/UX, web development, performance marketing, and technology.</p>
       </Reveal>
-      <Reveal className="about-media" y={30}><img src={`${A}/about-media.png`} alt="Social media content showreel" /></Reveal>
+      <Reveal className="about-media" y={30}><VideoCard id="5hIBptOriIM" title="Yantra Media: Your One-Stop Marketing & Communication Partner" thumb="maxresdefault" className="video-card--wide" /></Reveal>
       <AnimatePresence initial={false}>
         {!open && (
           <motion.div className="know-more-wrap" exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }}>
@@ -330,6 +330,52 @@ function About() {
         </div>
       </Expand>
     </section>
+  );
+}
+
+const trustStats = [
+  { to: 6, suffix: "+", label: <>Years in<br />Business</> },
+  { to: 25, suffix: "+", label: <>Industry<br />Professionals</> },
+  { to: 500, suffix: "+", label: <>Happy<br />Clients</> },
+  { to: 1, suffix: "k+", label: <>Keywords<br />Optimised</> },
+  { to: 150, suffix: "+", label: <>Website<br />Delivered</> },
+];
+
+/** Stats row two columns wide, as in the design; it auto-advances one column at a time until touched, and the arrow steps (looping at the end). */
+function TrustStats() {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [autoplay, setAutoplay] = useState(true);
+
+  const next = useCallback(() => {
+    const track = trackRef.current;
+    const column = track?.firstElementChild as HTMLElement | null;
+    if (!track || !column) return;
+    const atEnd = track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
+    if (atEnd) track.scrollTo({ left: 0, behavior: "smooth" });
+    else track.scrollBy({ left: column.offsetWidth, behavior: "smooth" });
+  }, []);
+
+  useEffect(() => {
+    if (!autoplay || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timer = window.setInterval(next, 2800);
+    return () => window.clearInterval(timer);
+  }, [autoplay, next]);
+
+  return (
+    <div className="trust-row">
+      <div className="trust-stats" ref={trackRef} onPointerDown={() => setAutoplay(false)}>
+        {trustStats.map((stat) => (
+          <div className="trust-stat" key={stat.suffix + stat.to}>
+            <div className="trust-fig">
+              {/* Invisible final value keeps the column width fixed while the counter runs. */}
+              <p className="trust-num"><span className="trust-sizer" aria-hidden="true">{stat.to}{stat.suffix}</span><span className="trust-count"><Counter to={stat.to} suffix={stat.suffix} /></span></p>
+              <p className="trust-label">{stat.label}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <motion.button type="button" className="trust-more" aria-label="Show more stats" onClick={() => { setAutoplay(false); next(); }} animate={{ x: [0, 5, 0] }} transition={{ duration: 1.6, repeat: Infinity }}>&gt;</motion.button>
+    </div>
   );
 }
 
@@ -413,13 +459,7 @@ export default function Home() {
 
         <section className="trust" aria-labelledby="trust-title">
           <Reveal><h2 id="trust-title" className="title-grey trust-title">Why Should you Trust Us!</h2></Reveal>
-          <div className="trust-stats">
-            <p className="trust-num trust-num--1"><Counter to={6} suffix="+" /></p>
-            <p className="trust-label trust-label--1">Years in<br />Business</p>
-            <p className="trust-num trust-num--2"><Counter to={25} suffix="+" /></p>
-            <p className="trust-label trust-label--2">Industry<br />Professionals</p>
-            <motion.span className="trust-more" aria-hidden="true" animate={{ x: [0, 5, 0] }} transition={{ duration: 1.6, repeat: Infinity }}>&gt;</motion.span>
-          </div>
+          <TrustStats />
         </section>
 
         <section className="strategy-call" aria-labelledby="strategy-title">

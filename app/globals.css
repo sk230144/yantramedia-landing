@@ -150,7 +150,8 @@ ul, ol { list-style: none; }
 .about h2 { text-align: center; font-weight: 400; font-size: calc(25 * var(--u)); }
 .about-copy { width: calc(338 * var(--u)); margin: calc(25 * var(--u)) auto 0; text-align: center; font-size: calc(15 * var(--u)); color: var(--grey); }
 .about-media { margin: calc(79 * var(--u)) 0 0 calc(22 * var(--u)); width: calc(358.346 * var(--u)); height: calc(202.981 * var(--u)); }
-.about-media img { width: 100%; height: 100%; object-fit: cover; }
+/* 16:9 YouTube video inside the design's 4px white frame. */
+.video-card--wide { width: 100%; height: 100%; border: calc(4 * var(--u)) solid #fff; border-radius: 0; }
 .expand { overflow: hidden; }
 .know-more-wrap { overflow: hidden; padding: calc(48 * var(--u)) 0 calc(31 * var(--u)); }
 .know-more { display: flex; align-items: center; margin-left: calc(130 * var(--u)); width: calc(154 * var(--u)); height: calc(35 * var(--u)); padding: 0 0 0 calc(15 * var(--u)); border: 0; border-radius: calc(6 * var(--u)); background: #fff; color: #000; font-size: calc(15 * var(--u)); }
@@ -200,14 +201,18 @@ ul, ol { list-style: none; }
 /* Trust stats */
 .trust { padding-top: calc(81 * var(--u)); }
 .trust-title { padding-left: calc(61 * var(--u)); text-align: left; }
-.trust-stats { position: relative; margin-top: calc(32 * var(--u)); height: calc(122 * var(--u)); font-family: var(--redhat); }
-.trust-num { position: absolute; font-size: calc(50 * var(--u)); color: var(--gold); line-height: 1.32; }
-.trust-num--1 { left: calc(61 * var(--u)); top: calc(1 * var(--u)); }
-.trust-num--2 { left: calc(226 * var(--u)); top: 0; }
-.trust-label { position: absolute; top: calc(70 * var(--u)); translate: -50% 0; text-align: center; white-space: nowrap; font-size: calc(20 * var(--u)); line-height: 1.32; color: #a87e7e; }
-.trust-label--1 { left: calc(82 * var(--u)); }
-.trust-label--2 { left: calc(265.5 * var(--u)); }
-.trust-more { position: absolute; left: calc(356 * var(--u)); top: calc(39 * var(--u)); font-family: var(--redhat); font-size: calc(30 * var(--u)); color: var(--grey); }
+/* 165px columns: number 61px in, label centred 7.5px left of the number's centre — matches the design for
+   the first two; the rest follow the same rule. Right padding lets the last pair snap into the same place. */
+.trust-row { position: relative; margin-top: calc(32 * var(--u)); }
+.trust-stats { display: flex; height: calc(122 * var(--u)); padding-right: calc(72 * var(--u)); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; font-family: var(--redhat); -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 60 * var(--u)), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 60 * var(--u)), transparent); }
+.trust-stats::-webkit-scrollbar { display: none; }
+.trust-stat { flex: none; position: relative; width: calc(165 * var(--u)); scroll-snap-align: start; }
+.trust-fig { position: absolute; left: calc(61 * var(--u)); top: 0; }
+.trust-num { position: relative; font-size: calc(50 * var(--u)); color: var(--gold); line-height: 1.32; white-space: nowrap; }
+.trust-sizer { visibility: hidden; }
+.trust-count { position: absolute; left: 0; top: 0; }
+.trust-label { position: absolute; left: 50%; top: calc(70 * var(--u)); translate: calc(-50% - 7.5 * var(--u)) 0; text-align: center; white-space: nowrap; font-size: calc(20 * var(--u)); line-height: 1.32; color: #a87e7e; }
+.trust-more { position: absolute; left: calc(352 * var(--u)); top: calc(39 * var(--u)); padding: 0 calc(4 * var(--u)); border: 0; background: none; font-family: var(--redhat); font-size: calc(30 * var(--u)); line-height: 1.32; color: var(--grey); cursor: pointer; }
 
 /* Strategy call block. Background colour is not confirmed from Figma yet. */
 .strategy-call { position: relative; margin-top: calc(40 * var(--u)); height: calc(341 * var(--u)); padding: calc(43 * var(--u)) calc(17 * var(--u)) 0 calc(38 * var(--u)); background: #000; color: #fff; font-family: var(--redhat); font-weight: 600; font-size: calc(20 * var(--u)); line-height: calc(26.4 * var(--u)); }
