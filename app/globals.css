@@ -108,8 +108,20 @@ ul, ol { list-style: none; }
 @keyframes pulse { 0%, 100% { scale: 1; opacity: 1; } 50% { scale: 1.12; opacity: .8; } }
 .controls--works { margin-top: calc(52 * var(--u)); padding: 0 calc(35 * var(--u)) 0 calc(12 * var(--u)); }
 
+/* Rate our work — from a 1.53×-scaled screenshot: two grey lines, then five emoji on a 61px pitch. */
+.rate { position: relative; padding-top: calc(38 * var(--u)); }
+.rate-title { text-align: center; font-family: var(--arial); font-weight: 400; font-size: calc(24 * var(--u)); line-height: calc(27.5 * var(--u)); color: var(--grey); }
+.rate-options { display: flex; gap: calc(11 * var(--u)); margin: calc(13 * var(--u)) 0 0 calc(45 * var(--u)); }
+.rate-option { display: grid; place-items: center; width: calc(50 * var(--u)); height: calc(50 * var(--u)); padding: 0; border: calc(3 * var(--u)) solid transparent; border-radius: 50%; background: none; font-size: calc(32 * var(--u)); line-height: 1; cursor: pointer; transition: border-color .2s; }
+.rate-option.is-picked { border-color: #2e7031; }
+.rate-option:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+/* "Thank you" popup, styled after the supplied artwork: red letters, thick brown outline, emoji for the "o". */
+.rate-popup { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; background: rgba(0,0,0,.35); cursor: pointer; }
+.rate-thanks { margin: 0; font-family: "Righteous", var(--poppins); font-size: calc(64 * var(--u)); line-height: 1; color: #ff1a10; -webkit-text-stroke: calc(14 * var(--u)) #6e2a08; paint-order: stroke fill; filter: drop-shadow(0 calc(10 * var(--u)) calc(18 * var(--u)) rgba(0,0,0,.35)); white-space: nowrap; }
+.rate-thanks-emoji { display: inline-block; margin: 0 calc(2 * var(--u)); -webkit-text-stroke: 0; font-family: system-ui, sans-serif; font-size: .62em; vertical-align: .08em; }
+
 /* Workflow */
-.workflow { padding-top: calc(52 * var(--u)); }
+.workflow { padding-top: calc(40 * var(--u)); }
 .workflow h2 { padding-left: calc(54 * var(--u)); font-family: var(--poppins); font-weight: 400; font-size: calc(30 * var(--u)); }
 .workflow ol { margin-top: calc(-9 * var(--u)); padding-left: calc(44 * var(--u)); }
 .workflow li { position: relative; height: calc(var(--h) * var(--u)); }
@@ -124,7 +136,9 @@ ul, ol { list-style: none; }
 .ecom-copy b { color: #3262c2; }
 
 /* SEO */
-.seo { padding-top: calc(70 * var(--u)); }
+/* Full-width banner (1461×1076 artwork) between the e-commerce band and the SEO section. */
+.seo-banner img { display: block; width: 100%; height: auto; }
+.seo { padding-top: calc(40 * var(--u)); }
 /* Two lines centred on the design box (x 86, 248 wide). */
 .seo-kicker { width: max-content; margin-left: calc(210 * var(--u)); translate: -50% 0; white-space: nowrap; text-align: center; font-weight: 700; font-size: calc(25 * var(--u)); color: #5378b0; }
 .seo-media { position: relative; margin: calc(33 * var(--u)) 0 0 calc(38 * var(--u)); width: calc(326 * var(--u)); height: calc(212 * var(--u)); box-shadow: 10px 10px 10px rgba(0,0,0,.18); }
@@ -135,18 +149,22 @@ ul, ol { list-style: none; }
 .seo-results p + p { margin-top: calc(14 * var(--u)); }
 .seo-results p:last-child { margin: calc(16 * var(--u)) 0 0 calc(3 * var(--u)); }
 
-/* Industries we've worked with */
-.industries-section { padding-top: calc(91 * var(--u)); }
-.industries-title { width: calc(299 * var(--u)); margin-left: calc(52 * var(--u)); text-align: center; font-family: var(--redhat); font-weight: 400; font-size: calc(25 * var(--u)); line-height: calc(33 * var(--u)); color: var(--grey); }
-/* Column boxes at x 13 / 157 / 290 (98 wide) as in the design; the last row sits 2px lower. */
-.industries { align-items: start; display: grid; grid-template-columns: calc(144 * var(--u)) calc(133 * var(--u)) calc(98 * var(--u)); grid-auto-rows: calc(44 * var(--u)); margin-top: calc(47 * var(--u)); padding-left: calc(13 * var(--u)); }
-.industries li { width: calc(98 * var(--u)); text-align: center; white-space: nowrap; font-family: var(--redhat); font-size: calc(14 * var(--u)); line-height: calc(17.54 * var(--u)); color: #3a3535; }
-.industries li:first-child { translate: calc(7 * var(--u)) 0; }
-.industries li:nth-child(n+13) { margin-top: calc(2 * var(--u)); }
+/* Industries — design is a 357×254 export of the 402 frame (scale 1.126): bar, headline, then a 3-column
+   grid on 30px rows with dividers between columns. Faint green circles sit in two corners. */
+/* Shown as a card: the content is scaled to 92% by redefining --u inside it. */
+.industries-section { --u: calc(min(1.1px, calc(100vw / 402)) * .92); position: relative; width: calc(402 * var(--u)); height: calc(296 * var(--u)); margin: calc(24 * var(--u)) auto 0; border-radius: calc(16 * var(--u)); box-shadow: 0 calc(6 * var(--u)) calc(16 * var(--u)) rgba(0,0,0,.14), 0 1px 3px rgba(0,0,0,.06); overflow: hidden; background: radial-gradient(circle at 104% -6%, #e3f3e7 0 calc(78 * var(--u)), transparent calc(79 * var(--u))), radial-gradient(circle at -14% 106%, #e8f5eb 0 calc(70 * var(--u)), transparent calc(71 * var(--u))), #fbfdfb; }
+.industries-bar { position: absolute; left: calc(16 * var(--u)); top: calc(17 * var(--u)); width: calc(26 * var(--u)); height: calc(2.5 * var(--u)); border-radius: 2px; background: #1e7a40; }
+.industries-title { position: absolute; left: calc(15 * var(--u)); top: calc(27 * var(--u)); font-family: var(--redhat); font-weight: 700; font-size: calc(30 * var(--u)); line-height: calc(30 * var(--u)); letter-spacing: -0.01em; color: #0b0d12; }
+.industries-title em { font-style: normal; color: #1e8442; }
+.industries { position: absolute; left: calc(34 * var(--u)); top: calc(131 * var(--u)); display: grid; grid-template-columns: calc(126 * var(--u)) calc(128 * var(--u)) calc(110 * var(--u)); grid-auto-rows: calc(30 * var(--u)); }
+.industries li { position: relative; display: flex; align-items: center; gap: calc(12 * var(--u)); white-space: nowrap; font-family: var(--redhat); font-weight: 500; font-size: calc(11 * var(--u)); color: #15181f; }
+.industries li:not(:nth-child(3n + 1))::before { content: ""; position: absolute; left: calc(-19 * var(--u)); top: calc(4 * var(--u)); width: 1px; height: calc(22 * var(--u)); background: #e2f1e5; }
+.industry-icon { flex: none; display: grid; place-items: center; width: calc(24 * var(--u)); height: calc(24 * var(--u)); border-radius: 50%; background: #e6f4e9; color: #1d6a39; }
+.industry-icon svg { width: calc(15 * var(--u)); height: calc(15 * var(--u)); stroke-width: 1.9; }
 
 /* About */
 /* The whole About block stays black, including everything "Know More" reveals. */
-.about { margin-top: calc(36 * var(--u)); padding-top: calc(89 * var(--u)); background: #000; color: #fff; }
+.about { margin-top: calc(60 * var(--u)); padding-top: calc(89 * var(--u)); background: #000; color: #fff; }
 .about h2 { text-align: center; font-weight: 400; font-size: calc(25 * var(--u)); }
 .about-copy { width: calc(338 * var(--u)); margin: calc(25 * var(--u)) auto 0; text-align: center; font-size: calc(15 * var(--u)); color: var(--grey); }
 .about-media { margin: calc(79 * var(--u)) 0 0 calc(22 * var(--u)); width: calc(358.346 * var(--u)); height: calc(202.981 * var(--u)); }
@@ -175,7 +193,7 @@ ul, ol { list-style: none; }
 .show-less svg { width: calc(18 * var(--u)); height: calc(18 * var(--u)); stroke-width: 1.6; }
 
 /* Testimonials */
-.testimonials { padding-top: calc(135 * var(--u)); }
+.testimonials { padding-top: calc(48 * var(--u)); }
 .testimonial-track { gap: calc(16 * var(--u)); padding: calc(8 * var(--u)) calc(35 * var(--u)) calc(16 * var(--u)) calc(33 * var(--u)); scroll-padding-left: calc(33 * var(--u)); }
 .testimonial-card { position: relative; margin: 0; width: calc(334 * var(--u)); height: calc(260 * var(--u)); padding: calc(27 * var(--u)) 0 0 calc(28 * var(--u)); background: #f6f6f6; border-radius: calc(17 * var(--u)); box-shadow: 3px 3px 5px 3px rgba(0,0,0,.1); color: #898686; }
 
@@ -270,6 +288,9 @@ ul, ol { list-style: none; }
 .book-field::placeholder { color: #e4e3e3; opacity: 1; }
 .book-field:focus { background: #f3f5f7; border-color: var(--green); box-shadow: 0 0 0 3px rgba(108,171,71,.18); }
 .book-field--area { height: calc(150 * var(--v)); padding-bottom: calc(16 * var(--v)); resize: none; }
+.book-field.is-invalid { border-color: #e5484d; background: #fff6f6; }
+.book-field-error { font-size: calc(13 * var(--v)); line-height: calc(16 * var(--v)); color: #d92d20; white-space: nowrap; }
+.book-check input.is-invalid { border-color: #e5484d; box-shadow: 0 0 0 3px rgba(229,72,77,.15); }
 
 .book-radio { display: flex; align-items: center; gap: calc(10 * var(--v)); cursor: pointer; }
 .book-radio input { appearance: none; flex: none; width: calc(23 * var(--v)); height: calc(23 * var(--v)); margin: 0; border: 1.5px solid #000; border-radius: 50%; background: #fff; display: grid; place-items: center; cursor: pointer; }

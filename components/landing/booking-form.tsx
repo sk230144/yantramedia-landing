@@ -25,6 +25,9 @@ type Copy = {
   sending: string;
   sendError: string;
   minWords: (words: number) => string;
+  required: string;
+  confirmRequired: string;
+  fixErrors: string;
   close: string;
 };
 
@@ -57,6 +60,9 @@ const copy: Record<Lang, Copy> = {
     sending: "SENDING...",
     sendError: "We couldn't send your details. Please try again.",
     minWords: (n) => `Please write at least 25 words (${n} so far).`,
+    required: "Please fill in this field.",
+    confirmRequired: "Please tick this box to confirm.",
+    fixErrors: "Please complete the highlighted fields above.",
     close: "Close and go back",
   },
   hi: {
@@ -86,6 +92,9 @@ const copy: Record<Lang, Copy> = {
     sending: "भेजा जा रहा है...",
     sendError: "जानकारी भेजी नहीं जा सकी। कृपया फिर से प्रयास करें।",
     minWords: (n) => `कृपया कम से कम 25 शब्द लिखें (अब तक ${n})।`,
+    required: "कृपया यह फ़ील्ड भरें।",
+    confirmRequired: "पुष्टि के लिए कृपया इस बॉक्स पर टिक करें।",
+    fixErrors: "कृपया ऊपर चिह्नित फ़ील्ड पूरे करें।",
     close: "बंद करें और वापस जाएँ",
   },
 };
@@ -186,6 +195,8 @@ export function BookingForm() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [cancelRequest, setCancelRequest] = useState(false);
+  // Field name -> message, shown under the field after a submit attempt.
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [lang, setLang] = useState<Lang>("en");
   const t = copy[lang];
 
@@ -197,10 +208,29 @@ export function BookingForm() {
     else router.push("/");
   }
 
+  const wordCount = (value: string) => value.trim().split(/\s+/).filter(Boolean).length;
+
+  function messageFor(el: HTMLInputElement | HTMLTextAreaElement) {
+    if (el.name === "consent") return t.confirmRequired;
+    if (el.name === "business" && el.value.trim()) return t.minWords(wordCount(el.value));
+    return t.required;
+  }
+
   function checkWords(event: React.FormEvent<HTMLTextAreaElement>) {
     const el = event.currentTarget;
-    const words = el.value.trim().split(/\s+/).filter(Boolean).length;
-    el.setCustomValidity(words >= MIN_BUSINESS_WORDS ? "" : t.minWords(words));
+    el.setCustomValidity(wordCount(el.value) >= MIN_BUSINESS_WORDS ? "" : t.minWords(wordCount(el.value)));
+  }
+
+  // Once a field has an error showing, re-check it as the visitor types so the message clears (or updates) live.
+  function recheck(event: React.FormEvent<HTMLFormElement>) {
+    const el = event.target as HTMLInputElement;
+    if (!el.name || !(el.name in errors)) return;
+    setErrors((prev) => {
+      const next = { ...prev };
+      if (el.validity.valid) delete next[el.name];
+      else next[el.name] = messageFor(el);
+      return next;
+    });
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -208,6 +238,20 @@ export function BookingForm() {
     if (!formRef.current || submitting) return;
     // "Cancel this Request" ticked: nothing is sent, the visitor is taken back.
     if (cancelRequest) { close(); return; }
+
+    // Validate ourselves (the form is noValidate): mobile browsers' native bubbles are easy to miss,
+    // which made it look as if Submit did nothing.
+    const invalid = Array.from(formRef.current.elements).filter(
+      (el): el is HTMLInputElement | HTMLTextAreaElement => (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) && !el.validity.valid,
+    );
+    if (invalid.length) {
+      setErrors(Object.fromEntries(invalid.map((el) => [el.name, messageFor(el)])));
+      setSubmitError(t.fixErrors);
+      invalid[0].scrollIntoView({ behavior: "smooth", block: "center" });
+      invalid[0].focus({ preventScroll: true });
+      return;
+    }
+    setErrors({});
 
     setSubmitting(true);
     setSubmitError("");
@@ -223,7 +267,9 @@ export function BookingForm() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
       console.error("EmailJS submission failed", error);
-      setSubmitError(t.sendError);
+      // Include EmailJS's own reason (e.g. quota or template problems) so a failure can be diagnosed.
+      const reason = error && typeof error === "object" && "text" in error ? ` (${(error as { status?: number; text?: string }).status ?? ""} ${(error as { text?: string }).text ?? ""})` : "";
+      setSubmitError(t.sendError + reason);
     } finally {
       setSubmitting(false);
     }
@@ -247,7 +293,7 @@ export function BookingForm() {
       {sent ? (
         <ThankYou />
       ) : (
-        <form ref={formRef} onSubmit={submit} className="book-form" noValidate={cancelRequest}>
+        <form ref={formRef} onSubmit={submit} onInput={recheck} onChange={recheck} className="book-form" noValidate>
           <input type="hidden" name="language" value={t.langName} />
           <p className="book-welcome" style={pos(39, 135.4)}>{t.welcome}</p>
           <img className="book-note-banner" style={pos(30, 243)} src="/book/please-note.jpg" width={1137} height={604}
@@ -262,10 +308,11 @@ export function BookingForm() {
                   {t.fields[f.name]}{f.required && <span className="book-req" aria-hidden="true">*</span>}
                 </label>
                 {f.multiline ? (
-                  <textarea id={`book-${f.name}`} name={f.name} className="book-field book-field--area" style={style} placeholder={placeholder} required={f.required} onInput={checkWords} />
+                  <textarea id={`book-${f.name}`} name={f.name} className={`book-field book-field--area ${errors[f.name] ? "is-invalid" : ""}`} style={style} placeholder={placeholder} required={f.required} onInput={checkWords} aria-invalid={!!errors[f.name]} aria-describedby={errors[f.name] ? `book-${f.name}-error` : undefined} />
                 ) : (
-                  <input id={`book-${f.name}`} name={f.name} type={f.type ?? "text"} className="book-field" style={style} placeholder={placeholder} required={f.required} />
+                  <input id={`book-${f.name}`} name={f.name} type={f.type ?? "text"} className={`book-field ${errors[f.name] ? "is-invalid" : ""}`} style={style} placeholder={placeholder} required={f.required} aria-invalid={!!errors[f.name]} aria-describedby={errors[f.name] ? `book-${f.name}-error` : undefined} />
                 )}
+                {errors[f.name] && <span className="book-field-error" id={`book-${f.name}-error`} style={pos(f.fx + 4, f.fy + (f.multiline ? 150 : 66) + 4)}>{errors[f.name]}</span>}
               </div>
             );
           })}
@@ -289,9 +336,10 @@ export function BookingForm() {
           </div>
 
           <label className="book-check" style={pos(49, 2473)}>
-            <input type="checkbox" name="consent" value="Yes" required={!cancelRequest} disabled={cancelRequest} />
+            <input type="checkbox" name="consent" value="Yes" required={!cancelRequest} disabled={cancelRequest} aria-invalid={!!errors.consent} className={errors.consent ? "is-invalid" : ""} />
             <span>{t.confirm}</span>
           </label>
+          {errors.consent && <span className="book-field-error" style={pos(84.5, 2558)}>{errors.consent}</span>}
           <label className="book-check book-check--cancel" style={pos(49, 2584)}>
             <input type="checkbox" name="cancelRequest" value="Yes" checked={cancelRequest} onChange={(e) => setCancelRequest(e.target.checked)} />
             <span>{t.cancel}</span>

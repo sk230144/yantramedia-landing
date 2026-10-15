@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
-import { ChevronUp, Volume2, VolumeX } from "lucide-react";
+import { BedDouble, BriefcaseBusiness, Building2, Car, ChevronUp, Gem, GraduationCap, HandHeart, House, Landmark, Newspaper, ShieldCheck, ShoppingCart, SolarPanel, Stethoscope, Volume2, VolumeX } from "lucide-react";
 import { Counter, Crop, Dots, NavButton, Reveal, useSnapCarousel } from "@/components/landing/primitives";
 import { FROM_HOME_KEY } from "@/components/landing/booking-form";
 
@@ -55,7 +55,23 @@ const testimonials = [
   { name: "Siddharth Rao", role: "Chief Operating Officer", quote: "The project was handled systematically, with clear communication and attention to functionality. A smooth overall experience.", photo: "/testimonials/client-09.jpg" },
 ];
 
-const industries = ["Health Care", "E-Commerce", "Jewellery", "Enterprise", "Banking", "Insurance", "RealEstate", "Automobile", "Corporate", "Hotel’s", "Solar Power", "Education", "NGO", "News Portals"];
+// Row by row, three per row, as in the design.
+const industries = [
+  { name: "Health Care", Icon: Stethoscope },
+  { name: "E-Commerce", Icon: ShoppingCart },
+  { name: "Jewellery", Icon: Gem },
+  { name: "Enterprise", Icon: Building2 },
+  { name: "Banking", Icon: Landmark },
+  { name: "Insurance", Icon: ShieldCheck },
+  { name: "Real Estate", Icon: House },
+  { name: "Automobile", Icon: Car },
+  { name: "Corporate", Icon: BriefcaseBusiness },
+  { name: "Hotel’s", Icon: BedDouble },
+  { name: "Solar Power", Icon: SolarPanel },
+  { name: "Education", Icon: GraduationCap },
+  { name: "NGO", Icon: HandHeart },
+  { name: "News Portals", Icon: Newspaper },
+];
 
 // h: row height, dx/dy: text offset from the number — the design spaces these unevenly
 const workflow = [
@@ -249,13 +265,72 @@ function Testimonials() {
   );
 }
 
+const ratings = [
+  { emoji: "😍", label: "Love it" },
+  { emoji: "😄", label: "Really like it" },
+  { emoji: "😊", label: "Like it" },
+  { emoji: "🙂", label: "It's okay" },
+  { emoji: "😐", label: "Not sure" },
+];
+
+function RateUs() {
+  const [picked, setPicked] = useState<number | null>(null);
+  const [showThanks, setShowThanks] = useState(false);
+
+  useEffect(() => {
+    if (!showThanks) return;
+    const timer = window.setTimeout(() => setShowThanks(false), 2600);
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setShowThanks(false); };
+    window.addEventListener("keydown", onKey);
+    return () => { window.clearTimeout(timer); window.removeEventListener("keydown", onKey); };
+  }, [showThanks]);
+
+  // Fetch the popup's display font up front so the first "thank you" doesn't flash in a fallback font.
+  useEffect(() => { document.fonts?.load("58px Righteous").catch(() => {}); }, []);
+
+  const rate = (index: number) => { setPicked(index); setShowThanks(true); };
+
+  return (
+    <section className="rate" aria-labelledby="rate-title">
+      <Reveal><h2 id="rate-title" className="rate-title">Please Rate Our Work<br />How Do You Like It!</h2></Reveal>
+      <div className="rate-options" role="radiogroup" aria-labelledby="rate-title">
+        {ratings.map((r, index) => (
+          <motion.button
+            key={r.label} type="button" role="radio" aria-checked={picked === index} aria-label={r.label}
+            className={`rate-option ${picked === index ? "is-picked" : ""}`} onClick={() => rate(index)}
+            whileHover={{ scale: 1.12 }} whileTap={{ scale: 0.9 }}
+          >
+            <span aria-hidden="true">{r.emoji}</span>
+          </motion.button>
+        ))}
+      </div>
+      <AnimatePresence>
+        {showThanks && (
+          <motion.div className="rate-popup" role="status" onClick={() => setShowThanks(false)} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <motion.p className="rate-thanks" initial={{ scale: 0.4, rotate: -6 }} animate={{ scale: 1, rotate: 0 }} exit={{ scale: 0.8, opacity: 0 }} transition={{ type: "spring", stiffness: 380, damping: 16 }}>
+              <span aria-hidden="true">thanky<span className="rate-thanks-emoji">😍</span>u</span><span className="sr-only">Thank you for rating us!</span>
+            </motion.p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
+  );
+}
+
 function Industries() {
   return (
     <section className="industries-section" aria-labelledby="industries-title">
-      <Reveal><h2 id="industries-title" className="industries-title">We have collaborated with the industries</h2></Reveal>
+      <span className="industries-bar" aria-hidden="true" />
+      <Reveal>
+        <h2 id="industries-title" className="industries-title">Proven expertise<br />across <em>diverse</em><br /><em>industries</em> and brands.</h2>
+      </Reveal>
       <ul className="industries">
-        {industries.map((name, index) => (
-          <motion.li key={name} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: (index % 3) * 0.06 + Math.floor(index / 3) * 0.05 }}>
+        {industries.map(({ name, Icon }, index) => (
+          <motion.li
+            key={name} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.6 }}
+            transition={{ duration: 0.45, delay: (index % 3) * 0.08 }}
+          >
+            <span className="industry-icon"><Icon aria-hidden="true" /></span>
             {name}
           </motion.li>
         ))}
@@ -464,6 +539,8 @@ export default function Home() {
         <FeaturedWorks />
         <ClientWorks />
 
+        <RateUs />
+
         <section className="workflow" aria-labelledby="workflow-title">
           <Reveal><h2 id="workflow-title">Our Proven Workflow</h2></Reveal>
           <ol>
@@ -485,6 +562,11 @@ export default function Home() {
           </Reveal>
         </section>
 
+        <Reveal className="seo-banner" y={24}>
+          <img src={`${A}/seo-growth.jpg`} width={1206} height={888} loading="lazy"
+            alt="We don't just build websites. We optimise, rank & drive up to 3X more organic enquiries." />
+        </Reveal>
+
         <section className="seo" aria-labelledby="seo-title">
           <Reveal><h3 className="seo-kicker">Live Client Google My<br />Business Analytics</h3></Reveal>
           <Reveal className="seo-media" y={24}>
@@ -499,8 +581,8 @@ export default function Home() {
           </Reveal>
         </section>
 
-        <Industries />
         <About />
+        <Industries />
         <Testimonials />
 
         <section className="trust" aria-labelledby="trust-title">
