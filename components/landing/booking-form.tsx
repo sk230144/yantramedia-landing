@@ -9,22 +9,22 @@ import emailjs from "@emailjs/browser";
 
 type Lang = "en" | "hi";
 
-type FieldCopy = { label: ReactNode; placeholder?: string };
-
 type Copy = {
   langName: string;
-  readIn: string;
-  intro: ReactNode;
-  fields: Record<string, FieldCopy>;
+  langLabel: string;
+  welcome: ReactNode;
+  fields: Record<string, ReactNode>;
   answer: string;
   shareLink: string;
-  noteBlock: ReactNode;
-  consent: ReactNode;
+  contactLabel: ReactNode;
+  whatsapp: string;
+  email: string;
+  confirm: ReactNode;
+  cancel: string;
   submit: string;
+  sending: string;
+  sendError: string;
   minWords: (words: number) => string;
-  doneTitle: string;
-  doneBody: string;
-  doneHome: string;
   close: string;
 };
 
@@ -32,65 +32,62 @@ type Copy = {
 const copy: Record<Lang, Copy> = {
   en: {
     langName: "English",
-    readIn: "Read In:",
-    intro: <>It will take 5 Mins to Fill this form<br />as we really wanted to know more<br />details about you and your<br />requirements then our team will<br />get back to you!</>,
+    langLabel: "Form language",
+    welcome: <>Welcome to Yantra Media,<br />we are happy to <span className="book-accent">connect</span><br />with you 😊.</>,
     fields: {
-      name: { label: "Your Name*" },
-      phone: { label: "Phone No*" },
-      industry: { label: "Industry*" },
-      designation: { label: "Your Designation*" },
-      websiteType: { label: <>What kind of website do you<br />Want?*</> },
-      budget: { label: <>Any Budget you have in<br />your mind?*</> },
-      business: { label: <>Please describe your business<br />in few words so we know your<br />business better*(min 20 words)</> },
-      socialLink: { label: <>Can you share your business<br />social link(if any):</> },
-      competitor: { label: "Any Competitor You Consider:" },
-      location: { label: "Where are you located?*" },
-      callTime: { label: "When can we call you?*" },
+      name: "Your Name",
+      phone: "Phone No",
+      industry: "Industry",
+      designation: "Your Designation",
+      websiteType: <>What kind of website do you<br />Want?</>,
+      budget: <>Any Budget you have in your mind? If it<br />is below 20k, you should consider a<br />Freelancer</>,
+      business: <>Please describe your business &amp; your<br />vision in few words so we know your<br />business better(min 25 words)</>,
+      socialLink: <>Can you share your business social link<br />or current website link (if any):</>,
+      competitor: "Any Competitor You Consider:",
+      location: "Where are you located?",
     },
     answer: "Your Answer:",
     shareLink: "Share Link:",
-    noteBlock: <>If you Fill all of these we are done,<br />Our Business Team will get back<br />with a complete Audit of Your<br />business if you qualify for the Live<br />Strategy Call Please Note How<br />you fill the form matters!</>,
-    consent: <>Pick Tick, If you have filled<br />all these details by yourself<br />and you wanted to know<br />more about our Service at<br />Yantra Media. If you want to<br />cancel the Appointment Please<br />Cancel,Or else we are waiting<br />to Meet you.</>,
-    submit: "Book a Strategy Call",
-    minWords: (n) => `Please write at least 20 words (${n} so far).`,
-    doneTitle: "Thank you!",
-    doneBody: "We've received your details. Our Business Team will review them and get back to you about your Strategy Call.",
-    doneHome: "Back to Home",
+    contactLabel: <>Where would you like to do the<br />conversation ahead</>,
+    whatsapp: "Whatsapp",
+    email: "Email",
+    confirm: <>One Final Confirmation!<br />Please tick the checkbox to confirm that you<br />have personally completed this form and are<br />genuinely interested in exploring<br />Yantra Media’s services.</>,
+    cancel: "Cancel this Request",
+    submit: "SUBMIT",
+    sending: "SENDING...",
+    sendError: "We couldn't send your details. Please try again.",
+    minWords: (n) => `Please write at least 25 words (${n} so far).`,
     close: "Close and go back",
   },
   hi: {
     langName: "हिंदी",
-    readIn: "भाषा:",
-    intro: <>इस फ़ॉर्म को भरने में 5 मिनट लगेंगे,<br />क्योंकि हम आपके और आपकी<br />ज़रूरतों के बारे में और जानना<br />चाहते हैं, इसके बाद हमारी टीम<br />आपसे संपर्क करेगी!</>,
+    langLabel: "फ़ॉर्म की भाषा",
+    welcome: <>Yantra Media में आपका स्वागत है,<br />हमें आपसे <span className="book-accent">जुड़कर</span> बहुत<br />खुशी हो रही है 😊।</>,
     fields: {
-      name: { label: "आपका नाम*" },
-      phone: { label: "फ़ोन नंबर*" },
-      industry: { label: "उद्योग*" },
-      designation: { label: "आपका पद*" },
-      websiteType: { label: <>आपको किस तरह की वेबसाइट<br />चाहिए?*</> },
-      budget: { label: <>क्या आपके मन में कोई<br />बजट है?*</> },
-      business: { label: <>कृपया अपने व्यवसाय के बारे में कुछ<br />शब्दों में बताएं ताकि हम उसे बेहतर<br />समझ सकें*(कम से कम 20 शब्द)</> },
-      socialLink: { label: <>क्या आप अपने व्यवसाय का सोशल<br />लिंक साझा कर सकते हैं (यदि हो):</> },
-      competitor: { label: "आप किसे अपना प्रतिस्पर्धी मानते हैं:" },
-      location: { label: "आप कहाँ स्थित हैं?*" },
-      callTime: { label: "हम आपको कब कॉल कर सकते हैं?*" },
+      name: "आपका नाम",
+      phone: "फ़ोन नंबर",
+      industry: "उद्योग",
+      designation: "आपका पद",
+      websiteType: <>आपको किस तरह की वेबसाइट<br />चाहिए?</>,
+      budget: <>आपके मन में कोई बजट है? अगर यह<br />20k से कम है, तो आपको किसी<br />फ्रीलांसर पर विचार करना चाहिए</>,
+      business: <>कृपया अपने व्यवसाय और विज़न के बारे<br />में कुछ शब्दों में बताएं ताकि हम उसे<br />बेहतर समझ सकें (कम से कम 25 शब्द)</>,
+      socialLink: <>क्या आप अपने व्यवसाय का सोशल लिंक<br />या वेबसाइट लिंक साझा कर सकते हैं:</>,
+      competitor: "आप किसे अपना प्रतिस्पर्धी मानते हैं:",
+      location: "आप कहाँ स्थित हैं?",
     },
     answer: "आपका उत्तर:",
     shareLink: "लिंक साझा करें:",
-    noteBlock: <>ये सब भरते ही आपका काम पूरा!<br />अगर आप लाइव स्ट्रैटेजी कॉल के लिए<br />योग्य हैं, तो हमारी बिज़नेस टीम<br />आपके व्यवसाय के पूरे ऑडिट के साथ<br />आपसे संपर्क करेगी। ध्यान दें, आप<br />फ़ॉर्म कैसे भरते हैं, यह मायने रखता है!</>,
-    consent: <>टिक करें, यदि आपने ये सभी<br />जानकारी स्वयं भरी है और आप<br />Yantra Media की सेवाओं के<br />बारे में और जानना चाहते हैं।<br />अगर आप अपॉइंटमेंट रद्द करना<br />चाहते हैं, तो कृपया रद्द करें,<br />वरना हम आपसे मिलने का<br />इंतज़ार कर रहे हैं।</>,
-    submit: "स्ट्रैटेजी कॉल बुक करें",
-    minWords: (n) => `कृपया कम से कम 20 शब्द लिखें (अब तक ${n})।`,
-    doneTitle: "धन्यवाद!",
-    doneBody: "हमें आपकी जानकारी मिल गई है। हमारी बिज़नेस टीम इसकी समीक्षा करके आपकी स्ट्रैटेजी कॉल के बारे में आपसे संपर्क करेगी।",
-    doneHome: "होम पर वापस जाएँ",
+    contactLabel: <>आप आगे की बातचीत कहाँ करना<br />चाहेंगे</>,
+    whatsapp: "व्हाट्सऐप",
+    email: "ईमेल",
+    confirm: <>एक अंतिम पुष्टि!<br />कृपया टिक करके पुष्टि करें कि आपने यह<br />फ़ॉर्म स्वयं भरा है और आप वास्तव में<br />Yantra Media की सेवाओं को जानने<br />में रुचि रखते हैं।</>,
+    cancel: "यह अनुरोध रद्द करें",
+    submit: "सबमिट करें",
+    sending: "भेजा जा रहा है...",
+    sendError: "जानकारी भेजी नहीं जा सकी। कृपया फिर से प्रयास करें।",
+    minWords: (n) => `कृपया कम से कम 25 शब्द लिखें (अब तक ${n})।`,
     close: "बंद करें और वापस जाएँ",
   },
-};
-
-const introNote: Record<Lang, ReactNode> = {
-  en: <>Please Note Based on the Info<br />you share we evaluated then plan<br />for a Call</>,
-  hi: <>कृपया ध्यान दें, आपकी दी गई<br />जानकारी का मूल्यांकन करके हम<br />कॉल की योजना बनाएंगे</>,
 };
 
 type Field = {
@@ -104,20 +101,20 @@ type Field = {
 };
 
 const fields: Field[] = [
-  { name: "name", required: true, lx: 32, ly: 385, fx: 31, fy: 421, pl: 15.6 },
-  { name: "phone", required: true, type: "tel", lx: 36.7, ly: 522, fx: 30.7, fy: 553, pl: 19.2 },
-  { name: "industry", required: true, lx: 40.5, ly: 645, fx: 35.3, fy: 676, pl: 19.3 },
-  { name: "designation", required: true, lx: 33, ly: 771, fx: 35.3, fy: 809, pl: 18 },
-  { name: "websiteType", required: true, lx: 33.3, ly: 908, fx: 35.3, fy: 967, pl: 18 },
-  { name: "budget", required: true, lx: 34, ly: 1062.4, fx: 29.7, fy: 1129, pl: 17.9 },
-  { name: "business", required: true, multiline: true, lx: 38.7, ly: 1225.4, fx: 29, fy: 1309, pl: 15.6 },
-  { name: "socialLink", link: true, lx: 33, ly: 1486, fx: 29.7, fy: 1542, pl: 18.6 },
-  { name: "competitor", link: true, lx: 28, ly: 1631, fx: 29.7, fy: 1665, pl: 18.6 },
-  { name: "location", required: true, lx: 26.3, ly: 1757, fx: 32, fy: 1795, pl: 17.9 },
-  { name: "callTime", required: true, lx: 25.3, ly: 1905, fx: 26, fy: 1943, pl: 18.3 },
+  { name: "name", required: true, lx: 32, ly: 472.2, fx: 31, fy: 508, pl: 16.6 },
+  { name: "phone", required: true, type: "tel", lx: 36.5, ly: 609.2, fx: 31, fy: 640, pl: 20.1 },
+  { name: "industry", required: true, lx: 41, ly: 732.2, fx: 35.5, fy: 763, pl: 20.1 },
+  { name: "designation", required: true, lx: 33, ly: 858.2, fx: 35.5, fy: 896, pl: 19.1 },
+  { name: "websiteType", required: true, lx: 33.5, ly: 995.2, fx: 35.5, fy: 1054, pl: 19.1 },
+  { name: "budget", required: true, lx: 34, ly: 1149.2, fx: 29.5, fy: 1228, pl: 19.1 },
+  { name: "business", required: true, multiline: true, lx: 38.5, ly: 1312.2, fx: 29, fy: 1396, pl: 16.6 },
+  { name: "socialLink", link: true, lx: 33, ly: 1573.2, fx: 29.5, fy: 1629, pl: 19.6 },
+  { name: "competitor", link: true, lx: 28, ly: 1718.2, fx: 29.5, fy: 1752, pl: 19.6 },
+  { name: "location", required: true, lx: 26.5, ly: 1844.2, fx: 32, fy: 1882, pl: 19.1 },
 ];
 
-const MIN_BUSINESS_WORDS = 20;
+const MIN_BUSINESS_WORDS = 25;
+const INSTAGRAM_URL = "https://www.instagram.com/yantramedia/";
 export const FROM_HOME_KEY = "ym-book-from-home";
 const EMAILJS_SERVICE_ID = "service_b2sh7c9";
 const EMAILJS_TEMPLATE_ID = "template_zdq1ej4";
@@ -139,10 +136,9 @@ function LanguagePicker({ lang, onChange, label }: { lang: Lang; onChange: (l: L
   }, [open]);
 
   return (
-    <div className="book-lang" style={pos(57, 107.8)} ref={ref}>
-      <span className="book-lang-label" id="book-lang-label">{label}</span>
-      <button type="button" className="book-lang-select" aria-haspopup="listbox" aria-expanded={open} aria-labelledby="book-lang-label book-lang-current" onClick={() => setOpen((o) => !o)}>
-        <span id="book-lang-current">{copy[lang].langName}</span>
+    <div className="book-lang" ref={ref}>
+      <button type="button" className="book-lang-select" aria-haspopup="listbox" aria-expanded={open} aria-label={`${label}: ${copy[lang].langName}`} onClick={() => setOpen((o) => !o)}>
+        <span>{copy[lang].langName}</span>
         <motion.span className="book-lang-chevron" animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }}><ChevronDown aria-hidden="true" /></motion.span>
       </button>
       <AnimatePresence>
@@ -167,12 +163,29 @@ function LanguagePicker({ lang, onChange, label }: { lang: Lang; onChange: (l: L
   );
 }
 
+function ThankYou() {
+  return (
+    <motion.section className="book-thanks" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} aria-live="polite">
+      <img src="/book/thank-you.jpg" alt="" width={887} height={1774} />
+      <div className="sr-only">
+        <h1>Thank You for submitting the form!</h1>
+        <p>Our team will review your details and get back to you shortly. In the meantime, follow us on Instagram for our latest updates, insights and work.</p>
+      </div>
+      {/* Transparent hit area over the "Follow us Now" button drawn in the artwork. */}
+      <motion.a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="book-thanks-follow" whileTap={{ scale: 0.97 }}>
+        <span className="sr-only">Follow us Now on Instagram</span>
+      </motion.a>
+    </motion.section>
+  );
+}
+
 export function BookingForm() {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [cancelRequest, setCancelRequest] = useState(false);
   const [lang, setLang] = useState<Lang>("en");
   const t = copy[lang];
 
@@ -193,6 +206,8 @@ export function BookingForm() {
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!formRef.current || submitting) return;
+    // "Cancel this Request" ticked: nothing is sent, the visitor is taken back.
+    if (cancelRequest) { close(); return; }
 
     setSubmitting(true);
     setSubmitError("");
@@ -208,44 +223,44 @@ export function BookingForm() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
       console.error("EmailJS submission failed", error);
-      setSubmitError(lang === "hi" ? "जानकारी भेजी नहीं जा सकी। कृपया फिर से प्रयास करें।" : "We couldn't send your details. Please try again.");
+      setSubmitError(t.sendError);
     } finally {
       setSubmitting(false);
     }
   }
 
   return (
-    <main className="book-page" lang={lang}>
-      <Link href="/" className="book-logo" aria-label="Yantramedia Agency — home">
-        <img className="book-logo-mark" src="/figma/ym-mark.gif" alt="" />
-        <img className="book-logo-word" src="/figma/yantra-wordmark.svg" alt="Yantramedia" width={173.842} height={26.1685} />
-        <span className="book-logo-agency">Agency</span>
-      </Link>
+    <main className={`book-page ${sent ? "is-done" : ""}`} lang={lang}>
+      {!sent && (
+        <>
+          <Link href="/" className="book-logo" aria-label="Yantramedia — home">
+            <img className="book-logo-mark" src="/figma/ym-mark.gif" alt="" />
+            <img className="book-logo-word" src="/figma/yantra-wordmark.svg" alt="Yantramedia" width={173.842} height={26.1685} />
+          </Link>
+          <LanguagePicker lang={lang} onChange={setLang} label={t.langLabel} />
+        </>
+      )}
       <motion.button type="button" className="book-close" onClick={close} aria-label={t.close} whileTap={{ scale: 0.9 }}>
         <X aria-hidden="true" />
       </motion.button>
 
       {sent ? (
-        <motion.section className="book-done" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} aria-live="polite">
-          <h1>{t.doneTitle}</h1>
-          <p>{t.doneBody}</p>
-          <button type="button" onClick={close} className="book-submit book-done-home">{t.doneHome}</button>
-        </motion.section>
+        <ThankYou />
       ) : (
-        <form ref={formRef} onSubmit={submit} className="book-form">
-          <LanguagePicker lang={lang} onChange={setLang} label={t.readIn} />
-
-          <div className="book-intro" style={pos(59, 154.3)}>
-            <p>{t.intro}</p>
-            <p>{introNote[lang]}</p>
-          </div>
+        <form ref={formRef} onSubmit={submit} className="book-form" noValidate={cancelRequest}>
+          <input type="hidden" name="language" value={t.langName} />
+          <p className="book-welcome" style={pos(39, 135.4)}>{t.welcome}</p>
+          <img className="book-note-banner" style={pos(30, 243)} src="/book/please-note.jpg" width={1137} height={604}
+            alt="Please Note: Based on the information you provide, our team will evaluate your requirements and schedule a consultation call if there's a suitable fit." />
 
           {fields.map((f) => {
             const placeholder = f.link ? t.shareLink : t.answer;
             const style = { ...pos(f.fx, f.fy), "--pl": f.pl } as React.CSSProperties;
             return (
               <div key={f.name} className="book-row">
-                <label className="book-label" htmlFor={`book-${f.name}`} style={pos(f.lx, f.ly)}>{t.fields[f.name].label}</label>
+                <label className="book-label" htmlFor={`book-${f.name}`} style={pos(f.lx, f.ly)}>
+                  {t.fields[f.name]}{f.required && <span className="book-req" aria-hidden="true">*</span>}
+                </label>
                 {f.multiline ? (
                   <textarea id={`book-${f.name}`} name={f.name} className="book-field book-field--area" style={style} placeholder={placeholder} required={f.required} onInput={checkWords} />
                 ) : (
@@ -255,17 +270,37 @@ export function BookingForm() {
             );
           })}
 
-          <p className="book-note" style={pos(31.5, 2046)}>{t.noteBlock}</p>
+          <div className="book-row" role="radiogroup" aria-labelledby="book-contact-label">
+            <p className="book-label" id="book-contact-label" style={pos(25.5, 1971.2)}>{t.contactLabel}<span className="book-req" aria-hidden="true">*</span></p>
+            <label className="book-radio" style={pos(32, 2047)}>
+              <input type="radio" name="contactMethod" value="WhatsApp" defaultChecked required />
+              <span>{t.whatsapp}</span>
+            </label>
+            <label className="book-radio" style={pos(238, 2047)}>
+              <input type="radio" name="contactMethod" value="Email" />
+              <span>{t.email}</span>
+            </label>
+          </div>
 
-          <label className="book-consent" style={pos(33, 2225)}>
-            <input type="checkbox" name="consent" required />
-            <span>{t.consent}</span>
+          <div className="book-steps" style={pos(0, 2105)}>
+            <img src="/book/one-step-away.jpg" width={1290} height={685}
+              alt="You're just one step away! 1. Complete the details: complete all the required details, and our Business Team will review your submission and conduct an initial audit of your business. 2. We review and assess your information to understand your business and requirements. 3. Schedule a strategy call: if your business qualifies, we'll get back to you to schedule a Live Strategy Call. Please note: the accuracy and quality of your responses matter, as they help us evaluate your business and determine the next steps." />
+            <div className="book-steps-card" aria-hidden="true"><img src="/book/one-step-away.jpg" alt="" /></div>
+          </div>
+
+          <label className="book-check" style={pos(49, 2473)}>
+            <input type="checkbox" name="consent" value="Yes" required={!cancelRequest} disabled={cancelRequest} />
+            <span>{t.confirm}</span>
+          </label>
+          <label className="book-check book-check--cancel" style={pos(49, 2584)}>
+            <input type="checkbox" name="cancelRequest" value="Yes" checked={cancelRequest} onChange={(e) => setCancelRequest(e.target.checked)} />
+            <span>{t.cancel}</span>
           </label>
 
-          <motion.button type="submit" disabled={submitting} aria-busy={submitting} className="book-submit" style={pos(26, 2410)} whileTap={{ scale: 0.98 }}>
-            {submitting ? (lang === "hi" ? "भेजा जा रहा है..." : "Sending...") : t.submit}
+          <motion.button type="submit" disabled={submitting} aria-busy={submitting} className="book-submit" style={pos(26, 2643)} whileTap={{ scale: 0.98 }}>
+            {submitting ? t.sending : t.submit}
           </motion.button>
-          {submitError && <p className="book-submit-error" style={pos(31, 2491)} role="alert">{submitError}</p>}
+          {submitError && <p className="book-submit-error" style={pos(31, 2724)} role="alert">{submitError}</p>}
         </form>
       )}
     </main>

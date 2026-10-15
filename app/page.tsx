@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
-import { Volume2, VolumeX } from "lucide-react";
+import { ChevronUp, Volume2, VolumeX } from "lucide-react";
 import { Counter, Crop, Dots, NavButton, Reveal, useSnapCarousel } from "@/components/landing/primitives";
 import { FROM_HOME_KEY } from "@/components/landing/booking-form";
 
@@ -264,6 +264,33 @@ function Industries() {
   );
 }
 
+// Expanded "Know More" block. All x/y values are design coordinates (px from the left / top of the block).
+const pos = (x: number, y: number) => ({ "--x": x, "--y": y }) as React.CSSProperties;
+
+const awards = [
+  { src: `${A}/award-1.png`, alt: "Indian Awards trophy", x: 35, w: 113, focus: "50% 22%" },
+  { src: `${A}/award-3.png`, alt: "Tech Digital Marketing Awards certificate", x: 163, w: 112, focus: "50% 50%" },
+  { src: `${A}/award-2.png`, alt: "Receiving an award", x: 290, w: 104, focus: "30% 50%" },
+];
+
+// x/y: photo circle; nx/ny and rx/ry: centre x and glyph top of the name and role text.
+// Sagar Das and Subham Srivastav share a photo in the design.
+const team = [
+  { photo: "saptarshi-purkayastha", alt: "Saptarshi Purkayastha", name: <>Saptarshi<br />Purkayastha</>, role: <>Founder &amp; CEO</>, x: 40, y: 761, nx: 85, ny: 870, rx: 85.2, ry: 913.5 },
+  { photo: "sagar-das", alt: "Sagar Das", name: <>Sagar Das</>, role: <>Director Operations &amp;<br />Business Development</>, x: 170, y: 761, nx: 215.5, ny: 870, rx: 215.8, ry: 913.5 },
+  { photo: "tapashree-bhattacharjee", alt: "Tapashree Bhattacharjee", name: <>Tapashree<br />Bhattacharjee</>, role: <>Director, Influencer<br />Marketing, Audit &amp;<br />Strategy</>, x: 297, y: 761, nx: 343.5, ny: 870, rx: 343.8, ry: 913.5 },
+  { photo: "uday-sarangi", alt: "Uday Sarangi", name: <>Uday Sarangi</>, role: <>Director, VFX &amp;<br />Audio</>, x: 39, y: 982, nx: 85.5, ny: 1091, rx: 84.2, ry: 1134.5 },
+  { photo: "akash-singh", alt: "Akash Singh", name: <>Akash Singh</>, role: <>Manager- Operations<br />&amp; Business Development</>, x: 175, y: 982, nx: 216.8, ny: 1091, rx: 221.2, ry: 1134.5 },
+  { photo: "sarmistha-dam", alt: "Sarmistha Dam", name: <>Sarmistha Dam</>, role: <>HR Manager</>, x: 305, y: 980, nx: 348.5, ny: 1089, rx: 351, ry: 1132.5 },
+  { photo: "aman-jangra", alt: "Aman Jangra", name: <>Aman Jangra</>, role: <>Senior Project<br />Manager- Technical</>, x: 45, y: 1287, nx: 90.8, ny: 1396, rx: 91.5, ry: 1437.5 },
+  { photo: "sagar-das", alt: "Subham Srivastav", name: <>Subham<br />Srivastav</>, role: <>Project Manager-<br />Technical</>, x: 167, y: 1285, nx: 213, ny: 1394, rx: 213.5, ry: 1437.5 },
+  { photo: "asha-patil", alt: "Asha Patil", name: <>Asha Patil</>, role: <>Project Manager-<br />Technical</>, x: 289, y: 1285, nx: 334.5, ny: 1394, rx: 335.5, ry: 1437.5 },
+  { photo: "anam-rizvi", alt: "Anam Rizvi", name: <>Anam Rizvi</>, role: <>SEO Manager</>, x: 48, y: 1490, nx: 93.5, ny: 1597, rx: 94.8, ry: 1642.5 },
+  { photo: "keshav-rajput", alt: "Keshav Rajput", name: <>Keshav Rajput</>, role: <>VFX &amp; Production<br />Lead</>, x: 170, y: 1488, nx: 216.5, ny: 1597, rx: 216.4, ry: 1640.5 },
+  { photo: "hetvi-faldu", alt: "Hetvi Faldu", name: <>Hetvi Faldu</>, role: <>Lead UI-UX<br />Designer</>, x: 292, y: 1488, nx: 338, ny: 1597, rx: 339.8, ry: 1640.5 },
+  { photo: "chetan-jahangir", alt: "Chetan Jahangir", name: <>Chetan<br />Jahangir</>, role: <>Creative Head</>, x: 44, y: 1691, nx: 87, ny: 1800, rx: 86.5, ry: 1843.5 },
+];
+
 function Expand({ open, children }: { open: boolean; children: React.ReactNode }) {
   return (
     <AnimatePresence initial={false}>
@@ -278,8 +305,29 @@ function Expand({ open, children }: { open: boolean; children: React.ReactNode }
 
 function About() {
   const [open, setOpen] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Scroll back to About first, then collapse once the scroll settles. Collapsing mid-scroll shrinks the
+  // page under the scroll and cancels it; done afterwards, the collapse happens off-screen below.
+  const collapse = () => {
+    const section = sectionRef.current;
+    if (!section) { setOpen(false); return; }
+    const top = section.getBoundingClientRect().top + window.scrollY;
+    if (Math.abs(window.scrollY - top) < 2) { setOpen(false); return; }
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      window.removeEventListener("scrollend", finish);
+      setOpen(false);
+    };
+    window.addEventListener("scrollend", finish);
+    window.setTimeout(finish, 1200); // browsers without scrollend
+    window.scrollTo({ top, behavior: "smooth" });
+  };
+
   return (
-    <section className={`about ${open ? "is-open" : ""}`} id="about" aria-labelledby="about-title">
+    <section ref={sectionRef} className={`about ${open ? "is-open" : ""}`} id="about" aria-labelledby="about-title">
       <Reveal>
         <h2 id="about-title">About Us</h2>
         <p className="about-copy">Yantra Media is a creative and technology driven agency delivering innovative solutions in branding, digital marketing, UI/UX, web development, performance marketing, and technology.</p>
@@ -296,37 +344,35 @@ function About() {
         )}
       </AnimatePresence>
       <Expand open={open}>
-        <div id="about-more">
-          <div className="founder">
-            <div className="founder-photo"><img src={`${A}/founder.png`} alt="Saptarshi Purkayastha" /></div>
-            <div>
-              <h3>Saptarshi Purkayastha</h3>
-              <p>Founder &amp; CEO</p>
-              <a className="linkedin-btn" href="https://www.linkedin.com/" target="_blank" rel="noreferrer" aria-label="Saptarshi Purkayastha on LinkedIn">
-                <Crop className="linkedin-logo" src={`${A}/linkedin.png`} crop={{ w: "100%", h: "300%", l: "0", t: "-100%" }} />
-              </a>
-            </div>
-          </div>
-          <div className="about-more-dark">
-            <div className="celebrating">
-              <p className="celebrating-kicker">CELEBRATING</p>
-              <img src={`${A}/six-years.png`} alt="6 Years Yantramedia — 2020–26" />
-              <p className="celebrating-copy">6 Years of Yantra Media — Empowering Growth Through Technology, Creativity &amp; Innovation.</p>
-            </div>
-            <div className="awards">
-              <h2 className="title-grey">Awards &amp; Recognitions</h2>
-              <div className="awards-collage">
-                <div className="award award--1"><Crop src={`${A}/award-1.png`} alt="Indian Awards trophy" crop={{ w: "100.16%", h: "157.38%", l: "-0.08%", t: "0" }} /></div>
-                <div className="award award--2"><Crop src={`${A}/award-2.png`} alt="Receiving an award" crop={{ w: "187.73%", h: "147.42%", l: "-43.72%", t: "0.17%" }} /></div>
-                <div className="award award--3"><img src={`${A}/award-3.png`} alt="Tech Digital Marketing Awards 2025 certificate" /></div>
-              </div>
-            </div>
-            <div className="team-photo">
-              <img src={`${A}/team.png`} alt="Team Yantra Media" />
-              <span className="team-vignette" aria-hidden="true" />
-              <span className="team-caption">Team Yantra Media</span>
-            </div>
-          </div>
+        <div className="about-gap" />
+        <div id="about-more" className="about-more">
+          <p className="celebrating-kicker" style={pos(68.5, 100.8)}>CELEBRATING</p>
+          <img className="celebrating-logo" src={`${A}/six-years.png`} alt="6 Years Yantramedia — 2020–26" style={pos(107.8, 132.5)} />
+          <p className="celebrating-copy" style={pos(217.75, 311.2)}>6 Years of Yantra Media —<br />Empowering Growth Through<br />Technology, Creativity &amp;<br />Innovation.</p>
+
+          <h2 className="title-grey about-more-title" style={pos(214, 486.4)}>Awards &amp; Recognitions</h2>
+          {awards.map((a) => (
+            <img key={a.src} className="award-tile" src={a.src} alt={a.alt} style={{ ...pos(a.x, 540.5), "--w": a.w, objectPosition: a.focus } as React.CSSProperties} />
+          ))}
+
+          <h2 className="title-grey about-more-title" style={pos(209.25, 703.9)}>Leadership</h2>
+          <h2 className="title-grey about-more-title" style={pos(237.75, 1230.9)}>Key- Management</h2>
+          {team.map((m) => (
+            <figure key={m.alt} className="team-member">
+              <motion.img
+                className="team-photo" src={`/team/${m.photo}.jpg`} alt={m.alt} loading="lazy" style={pos(m.x, m.y)}
+                initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, amount: 0.4 }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              />
+              <figcaption>
+                <span className="team-name" style={pos(m.nx, m.ny - 3.07)}>{m.name}</span>
+                <span className="team-role" style={pos(m.rx, m.ry - 2.05)}>{m.role}</span>
+              </figcaption>
+            </figure>
+          ))}
+
+          <motion.button type="button" className="show-less" style={pos(29, 1929)} aria-controls="about-more" aria-expanded="true" onClick={collapse} whileTap={{ scale: 0.97 }}>
+            <ChevronUp aria-hidden="true" />Show Less
+          </motion.button>
         </div>
       </Expand>
     </section>
