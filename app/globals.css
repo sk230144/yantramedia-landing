@@ -141,9 +141,9 @@ ul, ol { list-style: none; }
 .seo { padding-top: calc(40 * var(--u)); }
 /* Two lines centred on the design box (x 86, 248 wide). */
 .seo-kicker { width: max-content; margin-left: calc(210 * var(--u)); translate: -50% 0; white-space: nowrap; text-align: center; font-weight: 700; font-size: calc(25 * var(--u)); color: #5378b0; }
-.seo-media { position: relative; margin: calc(33 * var(--u)) 0 0 calc(38 * var(--u)); width: calc(326 * var(--u)); height: calc(212 * var(--u)); box-shadow: 10px 10px 10px rgba(0,0,0,.18); }
-.seo-media > img:first-child { width: 100%; height: 100%; object-fit: cover; }
-.seo-play { position: absolute; left: calc(113.24 * var(--u)); top: calc(68.78 * var(--u)); width: calc(87.1186 * var(--u)); height: calc(90.9464 * var(--u)); }
+/* 16:9 YouTube video (326×183) in place of the old static screenshot. */
+.seo-media { position: relative; margin: calc(33 * var(--u)) 0 0 calc(38 * var(--u)); width: calc(326 * var(--u)); height: calc(183.4 * var(--u)); box-shadow: 10px 10px 10px rgba(0,0,0,.18); }
+.video-card--seo { width: 100%; height: 100%; border-radius: 0; }
 .seo h2 { width: calc(305 * var(--u)); margin: calc(49 * var(--u)) 0 0 calc(58 * var(--u)); text-align: center; font-weight: 400; font-size: calc(25 * var(--u)); line-height: calc(35 * var(--u)); color: #4a689e; }
 .seo-results { margin-top: calc(28 * var(--u)); padding-left: calc(69 * var(--u)); font-weight: 700; font-size: calc(25 * var(--u)); color: #358c45; }
 .seo-results p + p { margin-top: calc(14 * var(--u)); }
@@ -181,7 +181,7 @@ ul, ol { list-style: none; }
 .about-more { position: relative; height: calc(2017 * var(--u)); background: #fff; color: #000; }
 .about-more > *, .team-member > *, .team-member figcaption > * { position: absolute; left: calc(var(--x) * var(--u)); top: calc(var(--y) * var(--u)); }
 .about-more > .team-member, .team-member > figcaption { position: static; margin: 0; }
-.celebrating-kicker { font-weight: 700; font-size: calc(18 * var(--u)); letter-spacing: calc(14.4 * var(--u)); color: #d9a223; }
+.celebrating-kicker { width: 100%; text-align: center; text-indent: calc(14.4 * var(--u)); font-weight: 700; font-size: calc(18 * var(--u)); letter-spacing: calc(14.4 * var(--u)); color: #d9a223; }
 .celebrating-logo { width: calc(204.9 * var(--u)); height: calc(142.2 * var(--u)); }
 .celebrating-copy { translate: -50% 0; white-space: nowrap; text-align: center; font-size: calc(25 * var(--u)); line-height: calc(29 * var(--u)); color: #d9a223; }
 .about-more-title { translate: -50% 0; white-space: nowrap; }

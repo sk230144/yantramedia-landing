@@ -343,28 +343,46 @@ function Industries() {
 const pos = (x: number, y: number) => ({ "--x": x, "--y": y }) as React.CSSProperties;
 
 const awards = [
-  { src: `${A}/award-1.png`, alt: "Indian Awards trophy", x: 35, w: 113, focus: "50% 22%" },
-  { src: `${A}/award-3.png`, alt: "Tech Digital Marketing Awards certificate", x: 163, w: 112, focus: "50% 50%" },
-  { src: `${A}/award-2.png`, alt: "Receiving an award", x: 290, w: 104, focus: "30% 50%" },
+  { src: `${A}/award-1.png`, alt: "Indian Awards trophy", x: 21.5, w: 113, focus: "50% 22%" },
+  { src: `${A}/award-3.png`, alt: "Tech Digital Marketing Awards certificate", x: 149.5, w: 112, focus: "50% 50%" },
+  { src: `${A}/award-2.png`, alt: "Receiving an award", x: 276.5, w: 104, focus: "30% 50%" },
 ];
 
-// x/y: photo circle; nx/ny and rx/ry: centre x and glyph top of the name and role text.
 // Sagar Das and Subham Srivastav share a photo in the design.
-const team = [
-  { photo: "saptarshi-purkayastha", alt: "Saptarshi Purkayastha", name: <>Saptarshi<br />Purkayastha</>, role: <>Founder &amp; CEO</>, x: 40, y: 761, nx: 85, ny: 870, rx: 85.2, ry: 913.5 },
-  { photo: "sagar-das", alt: "Sagar Das", name: <>Sagar Das</>, role: <>Director Operations &amp;<br />Business Development</>, x: 170, y: 761, nx: 215.5, ny: 870, rx: 215.8, ry: 913.5 },
-  { photo: "tapashree-bhattacharjee", alt: "Tapashree Bhattacharjee", name: <>Tapashree<br />Bhattacharjee</>, role: <>Director, Influencer<br />Marketing, Audit &amp;<br />Strategy</>, x: 297, y: 761, nx: 343.5, ny: 870, rx: 343.8, ry: 913.5 },
-  { photo: "uday-sarangi", alt: "Uday Sarangi", name: <>Uday Sarangi</>, role: <>Director, VFX &amp;<br />Audio</>, x: 39, y: 982, nx: 85.5, ny: 1091, rx: 84.2, ry: 1134.5 },
-  { photo: "akash-singh", alt: "Akash Singh", name: <>Akash Singh</>, role: <>Manager- Operations<br />&amp; Business Development</>, x: 175, y: 982, nx: 216.8, ny: 1091, rx: 221.2, ry: 1134.5 },
-  { photo: "sarmistha-dam", alt: "Sarmistha Dam", name: <>Sarmistha Dam</>, role: <>HR Manager</>, x: 305, y: 980, nx: 348.5, ny: 1089, rx: 351, ry: 1132.5 },
-  { photo: "aman-jangra", alt: "Aman Jangra", name: <>Aman Jangra</>, role: <>Senior Project<br />Manager- Technical</>, x: 45, y: 1287, nx: 90.8, ny: 1396, rx: 91.5, ry: 1437.5 },
-  { photo: "sagar-das", alt: "Subham Srivastav", name: <>Subham<br />Srivastav</>, role: <>Project Manager-<br />Technical</>, x: 167, y: 1285, nx: 213, ny: 1394, rx: 213.5, ry: 1437.5 },
-  { photo: "asha-patil", alt: "Asha Patil", name: <>Asha Patil</>, role: <>Project Manager-<br />Technical</>, x: 289, y: 1285, nx: 334.5, ny: 1394, rx: 335.5, ry: 1437.5 },
-  { photo: "anam-rizvi", alt: "Anam Rizvi", name: <>Anam Rizvi</>, role: <>SEO Manager</>, x: 48, y: 1490, nx: 93.5, ny: 1597, rx: 94.8, ry: 1642.5 },
-  { photo: "keshav-rajput", alt: "Keshav Rajput", name: <>Keshav Rajput</>, role: <>VFX &amp; Production<br />Lead</>, x: 170, y: 1488, nx: 216.5, ny: 1597, rx: 216.4, ry: 1640.5 },
-  { photo: "hetvi-faldu", alt: "Hetvi Faldu", name: <>Hetvi Faldu</>, role: <>Lead UI-UX<br />Designer</>, x: 292, y: 1488, nx: 338, ny: 1597, rx: 339.8, ry: 1640.5 },
-  { photo: "chetan-jahangir", alt: "Chetan Jahangir", name: <>Chetan<br />Jahangir</>, role: <>Creative Head</>, x: 44, y: 1691, nx: 87, ny: 1800, rx: 86.5, ry: 1843.5 },
+const leadership = [
+  { photo: "saptarshi-purkayastha", alt: "Saptarshi Purkayastha", name: <>Saptarshi<br />Purkayastha</>, role: <>Founder &amp; CEO</> },
+  { photo: "sagar-das", alt: "Sagar Das", name: <>Sagar Das</>, role: <>Director Operations &amp;<br />Business Development</> },
+  { photo: "tapashree-bhattacharjee", alt: "Tapashree Bhattacharjee", name: <>Tapashree<br />Bhattacharjee</>, role: <>Director, Influencer<br />Marketing, Audit &amp;<br />Strategy</> },
+  { photo: "uday-sarangi", alt: "Uday Sarangi", name: <>Uday Sarangi</>, role: <>Director, VFX &amp;<br />Audio</> },
+  { photo: "akash-singh", alt: "Akash Singh", name: <>Akash Singh</>, role: <>Manager- Operations<br />&amp; Business Development</> },
+  { photo: "sarmistha-dam", alt: "Sarmistha Dam", name: <>Sarmistha Dam</>, role: <>HR Manager</> },
 ];
+const keyManagement = [
+  { photo: "aman-jangra", alt: "Aman Jangra", name: <>Aman Jangra</>, role: <>Senior Project<br />Manager- Technical</> },
+  { photo: "sagar-das", alt: "Subham Srivastav", name: <>Subham<br />Srivastav</>, role: <>Project Manager-<br />Technical</> },
+  { photo: "asha-patil", alt: "Asha Patil", name: <>Asha Patil</>, role: <>Project Manager-<br />Technical</> },
+  { photo: "anam-rizvi", alt: "Anam Rizvi", name: <>Anam Rizvi</>, role: <>SEO Manager</> },
+  { photo: "keshav-rajput", alt: "Keshav Rajput", name: <>Keshav Rajput</>, role: <>VFX &amp; Production<br />Lead</> },
+  { photo: "hetvi-faldu", alt: "Hetvi Faldu", name: <>Hetvi Faldu</>, role: <>Lead UI-UX<br />Designer</> },
+  { photo: "chetan-jahangir", alt: "Chetan Jahangir", name: <>Chetan<br />Jahangir</>, role: <>Creative Head</> },
+];
+
+// Symmetric 3-column grid: column centres sit 130px apart around the page centre (201), and a
+// lone card on the last row is centred. Vertical rhythm follows the design: name 109px and role
+// 152.5px below the photo's top; rows 221px apart for Leadership, 203px for Key-Management.
+const COLUMN_CENTRES = [71, 201, 331];
+type Member = (typeof leadership)[number];
+function teamLayout(members: Member[], firstRowTop: number, rowPitch: number) {
+  return members.map((m, i) => {
+    const row = Math.floor(i / 3);
+    const onLastRow = row === Math.floor((members.length - 1) / 3);
+    const alone = onLastRow && members.length % 3 === 1;
+    const cx = alone ? 201 : COLUMN_CENTRES[i % 3];
+    const top = firstRowTop + row * rowPitch;
+    return { ...m, cx, top };
+  });
+}
+const team = [...teamLayout(leadership, 761, 221), ...teamLayout(keyManagement, 1285, 203)];
 
 function Expand({ open, children }: { open: boolean; children: React.ReactNode }) {
   return (
@@ -421,31 +439,31 @@ function About() {
       <Expand open={open}>
         <div className="about-gap" />
         <div id="about-more" className="about-more">
-          <p className="celebrating-kicker" style={pos(68.5, 100.8)}>CELEBRATING</p>
-          <img className="celebrating-logo" src={`${A}/six-years.png`} alt="6 Years Yantramedia — 2020–26" style={pos(107.8, 132.5)} />
-          <p className="celebrating-copy" style={pos(217.75, 311.2)}>6 Years of Yantra Media —<br />Empowering Growth Through<br />Technology, Creativity &amp;<br />Innovation.</p>
+          <p className="celebrating-kicker" style={pos(0, 100.8)}>CELEBRATING</p>
+          <img className="celebrating-logo" src={`${A}/six-years.png`} alt="6 Years Yantramedia — 2020–26" style={pos(98.55, 132.5)} />
+          <p className="celebrating-copy" style={pos(201, 311.2)}>6 Years of Yantra Media —<br />Empowering Growth Through<br />Technology, Creativity &amp;<br />Innovation.</p>
 
-          <h2 className="title-grey about-more-title" style={pos(214, 486.4)}>Awards &amp; Recognitions</h2>
+          <h2 className="title-grey about-more-title" style={pos(201, 486.4)}>Awards &amp; Recognitions</h2>
           {awards.map((a) => (
             <img key={a.src} className="award-tile" src={a.src} alt={a.alt} style={{ ...pos(a.x, 540.5), "--w": a.w, objectPosition: a.focus } as React.CSSProperties} />
           ))}
 
-          <h2 className="title-grey about-more-title" style={pos(209.25, 703.9)}>Leadership</h2>
-          <h2 className="title-grey about-more-title" style={pos(237.75, 1230.9)}>Key- Management</h2>
+          <h2 className="title-grey about-more-title" style={pos(201, 703.9)}>Leadership</h2>
+          <h2 className="title-grey about-more-title" style={pos(201, 1230.9)}>Key- Management</h2>
           {team.map((m) => (
             <figure key={m.alt} className="team-member">
               <motion.img
-                className="team-photo" src={`/team/${m.photo}.jpg`} alt={m.alt} loading="lazy" style={pos(m.x, m.y)}
+                className="team-photo" src={`/team/${m.photo}.jpg`} alt={m.alt} loading="lazy" style={pos(m.cx - 46, m.top)}
                 initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, amount: 0.4 }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
               />
               <figcaption>
-                <span className="team-name" style={pos(m.nx, m.ny - 3.07)}>{m.name}</span>
-                <span className="team-role" style={pos(m.rx, m.ry - 2.05)}>{m.role}</span>
+                <span className="team-name" style={pos(m.cx, m.top + 109 - 3.07)}>{m.name}</span>
+                <span className="team-role" style={pos(m.cx, m.top + 152.5 - 2.05)}>{m.role}</span>
               </figcaption>
             </figure>
           ))}
 
-          <motion.button type="button" className="show-less" style={pos(29, 1929)} aria-controls="about-more" aria-expanded="true" onClick={collapse} whileTap={{ scale: 0.97 }}>
+          <motion.button type="button" className="show-less" style={pos(27.5, 1929)} aria-controls="about-more" aria-expanded="true" onClick={collapse} whileTap={{ scale: 0.97 }}>
             <ChevronUp aria-hidden="true" />Show Less
           </motion.button>
         </div>
@@ -570,8 +588,7 @@ export default function Home() {
         <section className="seo" aria-labelledby="seo-title">
           <Reveal><h3 className="seo-kicker">Live Client Google My<br />Business Analytics</h3></Reveal>
           <Reveal className="seo-media" y={24}>
-            <img src={`${A}/seo-video.png`} alt="Google Business Profile results for Jeevan Jyoti Institute of Medical Sciences" />
-            <motion.img className="seo-play" src={`${A}/play-badge.svg`} alt="" width={87.1186} height={90.9464} animate={{ scale: [1, 1.08, 1] }} transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }} />
+            <VideoCard id="ODYte2SjH5o" title="Driving Organic Growth & Quality Enquiries Through SEO & Google Business Profile Optimisation" thumb="maxresdefault" className="video-card--seo" />
           </Reveal>
           <Reveal><h2 id="seo-title">Strategic SEO Drives Sales &amp; Generates More Google Calls</h2></Reveal>
           <Reveal className="seo-results">
