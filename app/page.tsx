@@ -591,11 +591,6 @@ export default function Home() {
             <VideoCard id="ODYte2SjH5o" title="Driving Organic Growth & Quality Enquiries Through SEO & Google Business Profile Optimisation" thumb="maxresdefault" className="video-card--seo" />
           </Reveal>
           <Reveal><h2 id="seo-title">Strategic SEO Drives Sales &amp; Generates More Google Calls</h2></Reveal>
-          <Reveal className="seo-results">
-            <p><Counter to={6000} suffix="+" /> Calls</p>
-            <p><Counter to={1400} suffix="+" /> Website Enquiries</p>
-            <p><Counter to={997} suffix="+" /> Directions</p>
-          </Reveal>
         </section>
 
         <About />
