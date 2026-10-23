@@ -604,7 +604,7 @@ export default function Home() {
 
         <section className="strategy-call" aria-labelledby="strategy-title">
           <Reveal>
-            <h2 id="strategy-title">Book a Website Strategy Call With Our Expert’s</h2>
+            <h2 id="strategy-title">Book a Website Strategy Call With Our&nbsp;Experts</h2>
             <p>You will have to fill a form, Our Team will get back to you!</p>
           </Reveal>
           <motion.div className="appointment-wrap" whileTap={{ scale: 0.97 }}>
