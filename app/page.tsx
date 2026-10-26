@@ -17,7 +17,7 @@ const services = [
   { label: <>E-Commerce<br />Website’s</>, pad: 38, gap: 44 },
   { label: <>Web &amp; Mobile<br />Applications</>, pad: 37, gap: 33 },
   { label: <>SEO, GEO, AEO</>, pad: 52, gap: 62 },
-  { label: <>Branding</>, pad: 56, gap: 0 },
+  { label: <>Performance Marketing</>, pad: 56, gap: 0 },
 ];
 
 const featuredWorks = [

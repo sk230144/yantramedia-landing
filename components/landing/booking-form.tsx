@@ -44,7 +44,7 @@ const copy: Record<Lang, Copy> = {
       designation: "Your Designation",
       websiteType: <>What kind of website do you<br />Want?</>,
       budget: <>Any Budget you have in your mind? If it<br />is below 20k, you should consider a<br />Freelancer</>,
-      business: <>Please describe your business &amp; your<br />vision in few words so we know your<br />business better(min 20 words)</>,
+      business: <>Please describe your requirement, what<br />kind of website you want and about your<br />business (min 25 words)</>,
       socialLink: <>Can you share your business social link<br />or current website link (if any):</>,
       competitor: "Any Competitor You Consider:",
       location: "Where are you located?",
@@ -59,7 +59,7 @@ const copy: Record<Lang, Copy> = {
     submit: "SUBMIT",
     sending: "SENDING...",
     sendError: "We couldn't send your details. Please try again.",
-    minWords: (n) => `Please write at least 20 words (${n} so far).`,
+    minWords: (n) => `Please write at least 25 words (${n} so far).`,
     required: "Please fill in this field.",
     confirmRequired: "Please tick this box to confirm.",
     fixErrors: "Please complete the highlighted fields above.",
@@ -76,7 +76,7 @@ const copy: Record<Lang, Copy> = {
       designation: "आपका पद",
       websiteType: <>आपको किस तरह की वेबसाइट<br />चाहिए?</>,
       budget: <>आपके मन में कोई बजट है? अगर यह<br />20k से कम है, तो आपको किसी<br />फ्रीलांसर पर विचार करना चाहिए</>,
-      business: <>कृपया अपने व्यवसाय और विज़न के बारे<br />में कुछ शब्दों में बताएं ताकि हम उसे<br />बेहतर समझ सकें (कम से कम 20 शब्द)</>,
+      business: <>कृपया अपनी ज़रूरत बताएं, आपको किस तरह<br />की वेबसाइट चाहिए और अपने व्यवसाय के<br />बारे में बताएं (कम से कम 25 शब्द)</>,
       socialLink: <>क्या आप अपने व्यवसाय का सोशल लिंक<br />या वेबसाइट लिंक साझा कर सकते हैं:</>,
       competitor: "आप किसे अपना प्रतिस्पर्धी मानते हैं:",
       location: "आप कहाँ स्थित हैं?",
@@ -91,7 +91,7 @@ const copy: Record<Lang, Copy> = {
     submit: "सबमिट करें",
     sending: "भेजा जा रहा है...",
     sendError: "जानकारी भेजी नहीं जा सकी। कृपया फिर से प्रयास करें।",
-    minWords: (n) => `कृपया कम से कम 20 शब्द लिखें (अब तक ${n})।`,
+    minWords: (n) => `कृपया कम से कम 25 शब्द लिखें (अब तक ${n})।`,
     required: "कृपया यह फ़ील्ड भरें।",
     confirmRequired: "पुष्टि के लिए कृपया इस बॉक्स पर टिक करें।",
     fixErrors: "कृपया ऊपर चिह्नित फ़ील्ड पूरे करें।",
@@ -122,7 +122,7 @@ const fields: Field[] = [
   { name: "location", required: true, lx: 26.5, ly: 1844.2, fx: 32, fy: 1882, pl: 19.1 },
 ];
 
-const MIN_BUSINESS_WORDS = 20;
+const MIN_BUSINESS_WORDS = 25;
 const INSTAGRAM_URL = "https://www.instagram.com/yantramedia/";
 export const FROM_HOME_KEY = "ym-book-from-home";
 const EMAILJS_SERVICE_ID = "service_b2sh7c9";
