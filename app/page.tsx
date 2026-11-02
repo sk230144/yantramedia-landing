@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { BedDouble, BriefcaseBusiness, Building2, Car, ChevronUp, Gem, GraduationCap, HandHeart, House, Landmark, Newspaper, ShieldCheck, ShoppingCart, SolarPanel, Stethoscope, Volume2, VolumeX } from "lucide-react";
-import { Counter, Crop, Dots, NavButton, Reveal, useSnapCarousel } from "@/components/landing/primitives";
+import { Counter, Dots, NavButton, Reveal, useSnapCarousel } from "@/components/landing/primitives";
 import { FROM_HOME_KEY } from "@/components/landing/booking-form";
 
 const A = "/figma";
@@ -85,26 +85,41 @@ const workflow = [
 
 const otherServices = ["Brand Identity", "Social Media Marketing", "Website Design and Development", "Video Production", "Visual Designing", "2D and 3D Animation", "Mobile Apps", "Digital Marketing"];
 
-function Logos() {
+// One row per marquee. Every logo sits centred on the same 1600×484 canvas, so they share one size.
+const clientLogos = [
+  [
+    { src: "group-888.png", alt: "Fortis" },
+    { src: "group-886.png", alt: "Mistral of Milan" },
+    { src: "group-890.png", alt: "inDrive" },
+    { src: "group-885.png", alt: "CSB Bank" },
+    { src: "group-889.png", alt: "Delhivery" },
+  ],
+  [
+    { src: "group-865.png", alt: "Govt. of Assam" },
+    { src: "group-887.png", alt: "The Taplow Group" },
+    { src: "group-871.png", alt: "Lifesave Hospital" },
+    { src: "group-872.png", alt: "Pratidhi Welfare Foundation" },
+    { src: "group-868.png", alt: "Jeevan Jyoti Hospital & Research Center" },
+  ],
+];
+
+function Logos({ row }: { row: number }) {
   return (
     <>
-      <img className="logo logo--fortis" src={`${A}/client-1951.png`} alt="Fortis" />
-      <div className="logo logo--mistral" role="img" aria-label="Mistral of Milan">
-        <Crop className="mistral-mask" src={`${A}/client-sprite.png`} crop={{ w: "100%", h: "338.97%", l: "0", t: "-60.27%" }} />
-        <Crop className="mistral-word" src={`${A}/client-sprite.png`} crop={{ w: "100%", h: "306.16%", l: "0", t: "-143.15%" }} />
-      </div>
-      <img className="logo logo--indrive" src={`${A}/client-116.png`} alt="inDrive" />
-      <img className="logo logo--csb" src={`${A}/client-x11.png`} alt="CSB Bank" />
+      {clientLogos[row].map((logo) => (
+        <img key={logo.src} className="logo" src={`${A}/clients/${logo.src}`} alt={logo.alt} />
+      ))}
     </>
   );
 }
 
 function Marquee({ reverse = false }: { reverse?: boolean }) {
+  const row = reverse ? 1 : 0;
   return (
     <div className={`marquee ${reverse ? "marquee--reverse" : ""}`}>
       <div className="marquee-track">
-        <div className="marquee-set"><Logos /></div>
-        <div className="marquee-set" aria-hidden="true"><Logos /></div>
+        <div className="marquee-set"><Logos row={row} /></div>
+        <div className="marquee-set" aria-hidden="true"><Logos row={row} /></div>
       </div>
     </div>
   );

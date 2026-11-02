@@ -59,18 +59,11 @@ ul, ol { list-style: none; }
 .clients .title-grey { padding-left: calc(89 * var(--u)); text-align: left; }
 .marquee { overflow: hidden; margin-top: calc(37 * var(--u)); }
 .clients .marquee:not(.marquee--reverse) { margin-top: calc(12 * var(--u)); }
-.marquee-track { display: flex; width: max-content; margin-left: calc(14 * var(--u)); animation: marquee 18s linear infinite; }
-.marquee--reverse .marquee-track { margin-left: calc(-8 * var(--u)); animation-direction: reverse; animation-duration: 22s; }
-.marquee-set { display: flex; align-items: flex-start; gap: calc(30 * var(--u)); padding-right: calc(30 * var(--u)); }
-.marquee--reverse .logo--fortis, .marquee--reverse .logo--mistral { order: 2; }
-.logo { flex: none; object-fit: cover; }
-.logo--fortis { width: calc(141 * var(--u)); height: calc(79 * var(--u)); }
-/* Per-logo top offsets from the design (row tops: Fortis / CSB). */
-.logo--mistral { margin-top: calc(25 * var(--u)); position: relative; width: calc(222.2 * var(--u)); height: calc(48 * var(--u)); }
-.mistral-mask { position: absolute; left: 0; top: 0; width: calc(136.886 * var(--u)); height: calc(40.345 * var(--u)); }
-.mistral-word { position: absolute; left: calc(85.36 * var(--u)); top: calc(3.09 * var(--u)); width: calc(136.822 * var(--u)); height: calc(44.689 * var(--u)); }
-.logo--indrive { margin-top: calc(6 * var(--u)); width: calc(203 * var(--u)); height: calc(58 * var(--u)); }
-.logo--csb { width: calc(210.154 * var(--u)); height: calc(70.458 * var(--u)); }
+.marquee-track { display: flex; width: max-content; margin-left: calc(14 * var(--u)); animation: marquee 24s linear infinite; }
+.marquee--reverse .marquee-track { margin-left: calc(-8 * var(--u)); animation-direction: reverse; animation-duration: 29s; }
+/* The logo canvases carry their own side padding, so no gap is needed between them. */
+.marquee-set { display: flex; align-items: center; }
+.logo { flex: none; width: calc(240 * var(--u)); aspect-ratio: 1600 / 484; object-fit: contain; }
 @keyframes marquee { to { transform: translateX(-50%); } }
 
 /* Services */
