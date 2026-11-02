@@ -11,6 +11,8 @@
   --redhat: "Red Hat Display", system-ui, sans-serif;
   --poppins: "Poppins", system-ui, sans-serif;
   --arial: Arial, Helvetica, sans-serif;
+  /* Light-only design: keep form controls, scrollbars and browser auto-dark from going dark. */
+  color-scheme: only light;
 }
 
 * { box-sizing: border-box; }
